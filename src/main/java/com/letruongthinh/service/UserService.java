@@ -17,5 +17,7 @@ public interface UserService {
 	public User updateUser(User user, Integer userId) throws Exception;
 	
 	public List<User>searchUser(String query);
+
+	public String deleteUser(Integer userId) throws Exception;
 	
 }

@@ -53,6 +53,10 @@ public class UserServiceImplementation implements UserService {
 		User user1 = findUserById(userId1);
 		
 		User user2 = findUserById(userId2);
+
+		if(user1==user2){
+			return user1;
+		}
 		
 		if(!user2.getFollowers().contains(user1.getId())&&!user1.getFollowings().contains(user2.getId())) {
 			user2.getFollowers().add(user1.getId());
@@ -97,4 +101,14 @@ public class UserServiceImplementation implements UserService {
 		return userRepository.searchUser(query);
 	}
 
+	@Override
+	public String deleteUser(Integer userId) throws Exception{
+		Optional<User> user=userRepository.findById(userId);
+		if(user.isEmpty()) {
+			throw new Exception("user not exists with id: "+userId);
+		}
+		userRepository.delete(user.get());
+		
+		return "user deleted successfully with id="+userId+" !";
+	}
 }
