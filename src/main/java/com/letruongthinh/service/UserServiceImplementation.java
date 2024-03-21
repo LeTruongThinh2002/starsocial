@@ -6,7 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.letruongthinh.config.JwtProvider;
+import com.letruongthinh.models.Post;
 import com.letruongthinh.models.User;
+import com.letruongthinh.repository.PostRepository;
 import com.letruongthinh.repository.UserRepository;
 
 @Service
@@ -14,6 +17,9 @@ public class UserServiceImplementation implements UserService {
 
 	@Autowired
 	UserRepository userRepository;
+
+	@Autowired
+	PostRepository postRepository;
 	
 	@Override
 	public User registerUser(User user) {
@@ -48,27 +54,27 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public User followUser(Integer userId1, Integer userId2) throws Exception {
+	public User followUser(Integer reqUserId, Integer userId2) throws Exception {
 
-		User user1 = findUserById(userId1);
+		User reqUser = findUserById(reqUserId);
 		
 		User user2 = findUserById(userId2);
 
-		if(user1==user2){
-			return user1;
+		if(reqUser==user2){
+			return reqUser;
 		}
 		
-		if(!user2.getFollowers().contains(user1.getId())&&!user1.getFollowings().contains(user2.getId())) {
-			user2.getFollowers().add(user1.getId());
-			user1.getFollowings().add(user2.getId());
+		if(!user2.getFollowers().contains(reqUser.getId())&&!reqUser.getFollowings().contains(user2.getId())) {
+			user2.getFollowers().add(reqUser.getId());
+			reqUser.getFollowings().add(user2.getId());
 		}else {
-			user2.getFollowers().remove(user1.getId());
-			user1.getFollowings().remove(user2.getId());
+			user2.getFollowers().remove(reqUser.getId());
+			reqUser.getFollowings().remove(user2.getId());
 		}
-		userRepository.save(user1);
+		userRepository.save(reqUser);
 		userRepository.save(user2);
 		
-		return user1;
+		return reqUser;
 	}
 
 	@Override
@@ -90,6 +96,9 @@ public class UserServiceImplementation implements UserService {
 			if(user.getEmail()!=null) {
 				oldUser.setEmail(user.getEmail());
 			}
+			if(user.getGender()!=null) {
+				oldUser.setGender(user.getGender());
+			}
 			
 			User updated= userRepository.save(oldUser);
 			
@@ -107,8 +116,18 @@ public class UserServiceImplementation implements UserService {
 		if(user.isEmpty()) {
 			throw new Exception("user not exists with id: "+userId);
 		}
+		
 		userRepository.delete(user.get());
 		
 		return "user deleted successfully with id="+userId+" !";
+	}
+
+	@Override
+	public User findUserByJwt(String jwt) {
+		String email = JwtProvider.getEmailFromJwtToken(jwt);
+		
+		User user=userRepository.findByEmail(email);
+		
+		return user;
 	}
 }

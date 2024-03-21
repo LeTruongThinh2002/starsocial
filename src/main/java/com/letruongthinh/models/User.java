@@ -31,7 +31,7 @@ public class User {
 	private List<Integer>followings =new ArrayList<>();
 	
 	@JsonIgnore
-	@ManyToMany(cascade = CascadeType.REMOVE)
+	@ManyToMany
 	private List<Post>savedPost=new ArrayList<>();
 
 	public User() {
