@@ -50,10 +50,7 @@ public class PostServiceImplementation implements PostService{
         if(post.getUser().getId()!=user.getId()){
             throw new Exception("you are not the owner of this post");
         }
-        List<Post> savedPosts = user.getSavedPost();
-        for (Post savedPost : savedPosts) {
-            postRepository.delete(savedPost);
-        }
+        
         postRepository.delete(post);
 
         return "post deleted successfully!";
