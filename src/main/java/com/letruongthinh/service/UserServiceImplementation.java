@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.letruongthinh.config.JwtProvider;
-import com.letruongthinh.models.Post;
+import com.letruongthinh.exceptions.UserException;
 import com.letruongthinh.models.User;
 import com.letruongthinh.repository.PostRepository;
 import com.letruongthinh.repository.UserRepository;
@@ -36,14 +36,14 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public User findUserById(Integer userId) throws Exception {
+	public User findUserById(Integer userId) throws UserException {
 		Optional<User> user=userRepository.findById(userId);
 		
 		if(user.isPresent()) {
 			return user.get();
 		}
 		
-		throw new Exception("user not exists with userId: "+userId);
+		throw new UserException("user not exists with userId: "+userId);
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public User followUser(Integer reqUserId, Integer userId2) throws Exception {
+	public User followUser(Integer reqUserId, Integer userId2) throws UserException {
 
 		User reqUser = findUserById(reqUserId);
 		
@@ -78,11 +78,11 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public User updateUser(User user, Integer userId) throws Exception {
+	public User updateUser(User user, Integer userId) throws UserException {
 			Optional<User> user1 = userRepository.findById(userId);
 			
 			if(user1.isEmpty()) {
-				throw new Exception("user not exists with id: "+userId);
+				throw new UserException("user not exists with id: "+userId);
 			}
 			
 			User oldUser = user1.get();
@@ -111,10 +111,10 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public String deleteUser(Integer userId) throws Exception{
+	public String deleteUser(Integer userId) throws UserException{
 		Optional<User> user=userRepository.findById(userId);
 		if(user.isEmpty()) {
-			throw new Exception("user not exists with id: "+userId);
+			throw new UserException("user not exists with id: "+userId);
 		}
 		
 		userRepository.delete(user.get());

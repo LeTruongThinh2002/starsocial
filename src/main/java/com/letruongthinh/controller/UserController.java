@@ -6,13 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.letruongthinh.exceptions.UserException;
 import com.letruongthinh.models.User;
 import com.letruongthinh.repository.UserRepository;
 import com.letruongthinh.service.UserService;
@@ -36,7 +36,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/api/users/{userId}")
-	public User getUserById(@PathVariable("userId") Integer id) throws Exception {
+	public User getUserById(@PathVariable("userId") Integer id) throws UserException {
 		User user =	userService.findUserById(id);
 		return user;
 	}
@@ -44,7 +44,7 @@ public class UserController {
 	
 	
 	@PutMapping("/api/users")
-	public User updateUser(@RequestBody User user,@RequestHeader("Authorization")String jwt) throws Exception {
+	public User updateUser(@RequestBody User user,@RequestHeader("Authorization")String jwt) throws UserException {
 		
 		User reqUser=userService.findUserByJwt(jwt);
 		
@@ -54,7 +54,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/api/users/follow/{userId2}")
-	public User followUserHandler(@RequestHeader("Authorization")String jwt, @PathVariable Integer userId2) throws Exception {
+	public User followUserHandler(@RequestHeader("Authorization")String jwt, @PathVariable Integer userId2) throws UserException {
 		
 		User reqUser=userService.findUserByJwt(jwt);
 		
@@ -69,7 +69,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/api/users/{userId}")
-	public String deleteUser(@PathVariable("userId") Integer userId) throws Exception {
+	public String deleteUser(@PathVariable("userId") Integer userId) throws UserException {
 		String message = userService.deleteUser(userId);
 		return message;
 	}
