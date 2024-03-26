@@ -1,5 +1,27 @@
 @tailwind base;
 @layer base {
+  .logo {
+    @apply text-transparent;
+    @apply bg-clip-text;
+    @apply bg-gradient-to-r;
+    @apply from-purple-700;
+    @apply from-20%;
+    @apply via-purple-500;
+    @apply via-10%;
+    @apply to-orange-400;
+    @apply to-70%;
+    @apply drop-shadow-md;
+  }
+  /* latin */
+  @font-face {
+    font-family: 'Playball';
+    font-weight: 400;
+    font-display: swap;
+    src: url(../public/TK3gWksYAxQ7jbsKcg8Eneo.woff2) format('woff2');
+  }
+  .playball-regular {
+    font-family: 'Playball', cursive;
+  }
 }
 @tailwind components;
 @tailwind utilities;
