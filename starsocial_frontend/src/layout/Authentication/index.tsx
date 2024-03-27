@@ -1,7 +1,6 @@
 import {Card} from '@mui/material';
-import Login from './Login';
 
-const Authentiocation = () => {
+const Authentiocation = ({children}: any) => {
   return (
     <div className="h-screen flex flex-col items-center justify-center overflow-hidden bg-[url('/star_authenticate_background.gif')] bg-cover bg-center">
       <Card className='p-8 h-fit lg:w-[500px] w-full border-transparent rounded-md border-lg'>
@@ -14,8 +13,7 @@ const Authentiocation = () => {
             <br /> discovering and sharing great experiences
           </p>
         </div>
-        <Login />
-        {/* <Register /> */}
+        {children}
       </Card>
     </div>
   );

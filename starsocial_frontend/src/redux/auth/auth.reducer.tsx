@@ -7,12 +7,24 @@ import {
   REGISTER_SUCCESS
 } from './auth.actionType';
 
-const initialState = {
+interface Types {
+  jwt: any;
+  error: any;
+  loading: boolean;
+}
+
+const initialState: Types = {
   jwt: null,
   error: null,
   loading: false
 };
-const authReducer = (state = initialState, action: any) => {
+
+type ActionType = {
+  type: string;
+  payload: any;
+};
+
+const authReducer = (state = initialState, action: ActionType) => {
   switch (action.type) {
     case LOGIN_REQUEST:
     case REGISTER_REQUEST:
@@ -27,7 +39,7 @@ const authReducer = (state = initialState, action: any) => {
       return {...state, loading: false, error: action.payload};
       break;
     default:
-      return state;
+      return {...state, loading: false, error: action.payload};
       break;
   }
 };

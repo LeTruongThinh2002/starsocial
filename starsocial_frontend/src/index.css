@@ -17,7 +17,7 @@
     font-family: 'Playball';
     font-weight: 400;
     font-display: swap;
-    src: url(../public/TK3gWksYAxQ7jbsKcg8Eneo.woff2) format('woff2');
+    src: url(/TK3gWksYAxQ7jbsKcg8Eneo.woff2) format('woff2');
   }
   .playball-regular {
     font-family: 'Playball', cursive;

@@ -8,6 +8,7 @@ import {
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 import {ChangeEvent, useState} from 'react';
 import {useDispatch} from 'react-redux';
+import {Link} from 'react-router-dom';
 import * as Yup from 'yup';
 import {RegisterType, registerUserAction} from '../../redux/auth/auth.action';
 
@@ -18,12 +19,12 @@ const initialValues = {
   password: '',
   gender: ''
 };
-const validationSchema = {
+const validationSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required')
-};
+});
 const Register = () => {
   const [gender, setGender] = useState('male');
   const dispatch = useDispatch();
@@ -31,7 +32,7 @@ const Register = () => {
   const handleSubmit = (value: RegisterType) => {
     value.gender = gender;
     console.log('hanlde submit', value);
-    dispatch(registerUserAction({data: value}));
+    registerUserAction(value)(dispatch);
   };
   const handleChangeGenfer = (event: ChangeEvent<HTMLInputElement>) => {
     setGender(event.target.value);
@@ -40,7 +41,7 @@ const Register = () => {
     <>
       <Formik
         onSubmit={handleSubmit}
-        // validationSchema={validationSchema}
+        validationSchema={validationSchema}
         initialValues={initialValues}
       >
         <Form className='space-y-5'>
@@ -53,7 +54,6 @@ const Register = () => {
                 type='text'
                 variant='standard'
                 fullWidth
-                focused={false}
               />
               <ErrorMessage
                 name='firstName'
@@ -69,7 +69,6 @@ const Register = () => {
                 type='text'
                 variant='standard'
                 fullWidth
-                focused={false}
               />
               <ErrorMessage
                 name='lastName'
@@ -85,7 +84,6 @@ const Register = () => {
                 type='email'
                 variant='standard'
                 fullWidth
-                focused={false}
               />
               <ErrorMessage
                 name='email'
@@ -101,7 +99,6 @@ const Register = () => {
                 type='password'
                 variant='standard'
                 fullWidth
-                focused={false}
               />
               <ErrorMessage
                 name='password'
@@ -136,6 +133,14 @@ const Register = () => {
           >
             Register
           </Button>
+          <div>
+            <span className=' lg:text-lg text-xl'>
+              If you have account,{' '}
+              <Link className='text-sky-700 underline' to={'/login'}>
+                login here!
+              </Link>
+            </span>
+          </div>
         </Form>
       </Formik>
     </>
