@@ -1,11 +1,11 @@
 import DataSaverOnRoundedIcon from '@mui/icons-material/DataSaverOnRounded';
 import Diversity2RoundedIcon from '@mui/icons-material/Diversity2Rounded';
-import FaceRetouchingNaturalRoundedIcon from '@mui/icons-material/FaceRetouchingNaturalRounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 import MovieFilterRoundedIcon from '@mui/icons-material/MovieFilterRounded';
 import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
+import {Avatar} from '@mui/material';
 
 export const SideMenu = [
   {
@@ -40,7 +40,7 @@ export const SideMenu = [
   },
   {
     title: 'Profile',
-    icon: <FaceRetouchingNaturalRoundedIcon fontSize='large' />,
+    icon: <Avatar src='https://i.postimg.cc/HsNS3tY3/image.jpg' />,
     path: '/profile'
   }
 ];

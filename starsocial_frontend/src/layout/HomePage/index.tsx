@@ -6,22 +6,22 @@ function Layout({children}: any) {
   return (
     <div className='bg-black'>
       <Grid container spacing={0}>
-        <Grid item xs={0} lg={3}>
+        <Grid item xs={0} lg={1}>
           <div className='sticky top-0'>
             <SideBar />
           </div>
         </Grid>
         <Grid
-          lg={location.pathname === '/' ? 6 : 9}
+          lg={location.pathname === '/' ? 8 : 11}
           item
-          className='px-5 flex justify-center'
+          className='px-20 flex justify-center'
           xs={12}
         >
           {children}
         </Grid>
         {location.pathname === '/' ? (
-          <Grid item lg={3}>
-            <div className='relative'>
+          <Grid item lg={location.pathname === '/' ? 3 : 0}>
+            <div className='sticky top-0'>
               <RightSideBar />
             </div>
           </Grid>
