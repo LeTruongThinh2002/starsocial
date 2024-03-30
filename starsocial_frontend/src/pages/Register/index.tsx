@@ -17,9 +17,12 @@ const initialValues = {
   lastName: '',
   email: '',
   password: '',
-  gender: ''
+  gender: '',
+  avatar: ''
 };
 const validationSchema = Yup.object().shape({
+  firstName: Yup.string().trim().required('First name is required'),
+  lastName: Yup.string().trim().required('Last name is required'),
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
@@ -31,6 +34,13 @@ const Register = () => {
 
   const handleSubmit = (value: RegisterType) => {
     value.gender = gender;
+    if (gender == 'male') {
+      value.avatar =
+        'https://cdn.pixabay.com/animation/2022/12/05/15/23/15-23-06-837_512.gif';
+    } else {
+      value.avatar =
+        'https://cdn.pixabay.com/animation/2023/12/01/11/58/11-58-39-702_512.gif';
+    }
     console.log('hanlde submit', value);
     registerUserAction(value)(dispatch);
   };

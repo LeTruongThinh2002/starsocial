@@ -1,4 +1,4 @@
-import {Grid} from '@mui/material';
+import Grid from '@mui/material/Grid';
 import RightSideBar from '../../components/RightSideBar';
 import SideBar from '../../components/SideBar';
 
@@ -11,12 +11,7 @@ function Layout({children}: any) {
             <SideBar />
           </div>
         </Grid>
-        <Grid
-          lg={location.pathname === '/' ? 8 : 11}
-          item
-          className='px-20 flex justify-center'
-          xs={12}
-        >
+        <Grid lg={location.pathname === '/' ? 8 : 11} item className='px-20 flex justify-center' xs={12}>
           {children}
         </Grid>
         {location.pathname === '/' ? (

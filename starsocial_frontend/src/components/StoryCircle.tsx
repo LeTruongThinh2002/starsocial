@@ -1,5 +1,5 @@
 import {Add} from '@mui/icons-material';
-import {Avatar} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
 
 const StoryCircle = () => {
   return (

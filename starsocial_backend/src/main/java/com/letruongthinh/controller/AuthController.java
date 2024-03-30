@@ -51,6 +51,9 @@ public class AuthController {
 		newUser.setFirstName(user.getFirstName());
 		newUser.setLastName(user.getLastName());
 		newUser.setEmail(user.getEmail());
+        newUser.setGender(user.getGender());
+        newUser.setAvatar(user.getAvatar());
+        newUser.setBackground("https://cdn.pixabay.com/photo/2019/10/20/14/16/milky-way-4563764_640.jpg");
 		newUser.setPassword(passwordEncoder.encode(user.getPassword()));
 	
 		User savedUser=userRepository.save(newUser);

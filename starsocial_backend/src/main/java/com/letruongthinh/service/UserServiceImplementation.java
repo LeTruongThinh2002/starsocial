@@ -99,6 +99,9 @@ public class UserServiceImplementation implements UserService {
 			if(user.getGender()!=null) {
 				oldUser.setGender(user.getGender());
 			}
+			if(user.getAvatar()!=null) {
+				oldUser.setAvatar(user.getAvatar());
+			}
 			
 			User updated= userRepository.save(oldUser);
 			

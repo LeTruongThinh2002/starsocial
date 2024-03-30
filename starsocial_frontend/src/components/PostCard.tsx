@@ -1,25 +1,24 @@
-import {
-  Bookmark,
-  Comment,
-  Favorite,
-  MoreVert,
-  Share
-} from '@mui/icons-material';
-import {
-  Avatar,
-  Card,
-  CardActions,
-  CardContent,
-  CardHeader,
-  CardMedia,
-  IconButton,
-  Typography
-} from '@mui/material';
-import {red} from '@mui/material/colors';
+import {Bookmark, Comment, Favorite, MoreVert, Share} from '@mui/icons-material';
+import Avatar from '@mui/material/Avatar';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import CardMedia from '@mui/material/CardMedia';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import red from '@mui/material/colors/red';
 
 const PostCard = () => {
   return (
-    <Card>
+    <Card
+      sx={{
+        backgroundColor: 'transparent',
+        color: 'white',
+        borderBottom: '1px solid #1f2937',
+        borderRadius: '0px'
+      }}
+    >
       <CardHeader
         avatar={
           <Avatar sx={{bgcolor: red[500]}} aria-label='recipe'>
@@ -27,14 +26,15 @@ const PostCard = () => {
           </Avatar>
         }
         action={
-          <IconButton aria-label='settings'>
+          <IconButton color='inherit' aria-label='settings'>
             <MoreVert />
           </IconButton>
         }
         title='User Name'
         subheader='Date Post'
+        subheaderTypographyProps={{color: 'rgba(255, 255, 255, 0.5)'}}
       />
-      <div className='w-full flex justify-center bg-current'>
+      <div className='w-full flex justify-center border border-stone-800 rounded-lg'>
         <CardMedia
           component='img'
           sx={{
@@ -46,23 +46,22 @@ const PostCard = () => {
         />
       </div>
       <CardContent>
-        <Typography variant='body2' color='text.secondary'>
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+        <Typography variant='body2' color='inherits'>
+          This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of
+          frozen peas along with the mussels, if you like.
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
-        <IconButton aria-label='add to favorites'>
+        <IconButton color='inherit' aria-label='add to favorites'>
           <Favorite />
         </IconButton>
-        <IconButton aria-label='comment'>
+        <IconButton color='inherit' aria-label='comment'>
           <Comment />
         </IconButton>
-        <IconButton aria-label='share'>
+        <IconButton color='inherit' aria-label='share'>
           <Share />
         </IconButton>
-        <IconButton sx={{marginLeft: 'auto'}} aria-label='bookmark'>
+        <IconButton color='inherit' sx={{marginLeft: 'auto'}} aria-label='bookmark'>
           <Bookmark />
         </IconButton>
       </CardActions>

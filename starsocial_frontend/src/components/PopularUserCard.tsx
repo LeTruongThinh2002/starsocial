@@ -1,5 +1,6 @@
-import {Avatar, CardHeader} from '@mui/material';
-import {red} from '@mui/material/colors';
+import Avatar from '@mui/material/Avatar';
+import CardHeader from '@mui/material/CardHeader';
+import red from '@mui/material/colors/red';
 
 const PopularUserCard = () => {
   return (
@@ -7,7 +8,7 @@ const PopularUserCard = () => {
       <CardHeader
         avatar={
           <Avatar sx={{bgcolor: red[500]}} aria-label='recipe'>
-            R
+            Ruhehaea
           </Avatar>
         }
         title='Shrimp and Chorizo Paella'

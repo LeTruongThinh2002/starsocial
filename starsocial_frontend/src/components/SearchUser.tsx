@@ -1,4 +1,4 @@
-import {Input} from '@mui/material';
+import Input from '@mui/material/Input';
 
 const SearchUser = () => {
   return (
@@ -9,7 +9,7 @@ const SearchUser = () => {
         color: 'white',
         backgroundColor: '#101010',
         padding: '10px',
-        margin: '10px',
+
         borderRadius: '10px'
       }}
       disableUnderline
