@@ -1,7 +1,7 @@
 package com.letruongthinh.service;
 
 import java.time.LocalDateTime;
-
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,6 +32,7 @@ public class PostServiceImplementation implements PostService{
 
         Post newPost = new Post();
         newPost.setCaption(post.getCaption());
+        
         newPost.setImage(post.getImage());
         newPost.setCreateAt(LocalDateTime.now());
         newPost.setVideo(post.getVideo());
@@ -59,6 +60,7 @@ public class PostServiceImplementation implements PostService{
     @Override
     public List<Post> findAllPost() {
        List<Post> posts = postRepository.findAll();
+       Collections.reverse(posts);
         return posts;
     }
 

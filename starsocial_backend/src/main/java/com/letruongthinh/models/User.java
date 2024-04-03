@@ -31,7 +31,10 @@ public class User {
 	private String firstName;
 	private String lastName;
 	private String email;
+
+	@JsonIgnore
 	private String password;
+	
 	private String avatar;
 	private String background;
 	

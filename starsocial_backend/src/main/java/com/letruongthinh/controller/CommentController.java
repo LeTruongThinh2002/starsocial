@@ -1,8 +1,12 @@
 package com.letruongthinh.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -11,7 +15,6 @@ import com.letruongthinh.models.Comment;
 import com.letruongthinh.models.User;
 import com.letruongthinh.service.CommentService;
 import com.letruongthinh.service.UserService;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
@@ -28,6 +31,15 @@ public class CommentController {
         User user=userService.findUserByJwt(jwt);
 
         Comment newComment = commentService.createComment(comment,postId, user.getId());
+
+        return newComment;
+    }
+
+    @GetMapping("/api/comments/post/{postId}")
+    public List<Comment> findCommentByPostId(@PathVariable Integer postId, @RequestHeader("Authorization") String jwt) throws Exception{
+        User user=userService.findUserByJwt(jwt);
+        
+        List<Comment> newComment = commentService.findCommentByPostId(postId);
 
         return newComment;
     }

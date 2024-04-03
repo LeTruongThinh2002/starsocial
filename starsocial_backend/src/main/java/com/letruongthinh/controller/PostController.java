@@ -55,14 +55,14 @@ public class PostController {
         return new ResponseEntity<Post>(post,HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/posts/user/{userId}")
+    @GetMapping("/api/posts/user/{userId}")
     public ResponseEntity<List<Post>>findUsersPost(@PathVariable Integer userId){
 
         List<Post>posts=postService.findPostByUserId(userId);
         return new ResponseEntity<List<Post>>(posts,HttpStatus.OK);
     }
 
-    @GetMapping("/posts")
+    @GetMapping("/api/posts")
     public ResponseEntity<List<Post>>findAllPost(){
 
         List<Post>posts=postService.findAllPost();

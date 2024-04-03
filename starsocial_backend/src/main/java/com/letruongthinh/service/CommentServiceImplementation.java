@@ -1,6 +1,7 @@
 package com.letruongthinh.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,6 +59,17 @@ public class CommentServiceImplementation implements CommentService {
         }
 
         return opt.get();
+    }
+
+    @Override
+    public List<Comment> findCommentByPostId(Integer postId) throws Exception {
+        List<Comment> opt=commentRepository.findCommentByPostId(postId);
+
+        if(opt.isEmpty()) {
+            throw new Exception("comment not exist");
+        }
+
+        return opt;
     }
 
     @Override

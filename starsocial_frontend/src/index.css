@@ -12,6 +12,19 @@
     @apply to-70%;
     @apply drop-shadow-md;
   }
+  .modal {
+    @apply absolute;
+    @apply top-1/2;
+    @apply left-1/2;
+    @apply transform;
+    @apply -translate-x-1/2;
+    @apply -translate-y-1/2;
+    @apply bg-slate-800;
+    @apply text-white;
+    @apply shadow-md;
+    @apply rounded-lg;
+    @apply p-4;
+  }
   /* latin */
   @font-face {
     font-family: 'Playball';

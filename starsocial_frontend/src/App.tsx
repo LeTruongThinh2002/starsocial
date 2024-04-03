@@ -1,7 +1,12 @@
 import {useEffect} from 'react';
 import {Toaster} from 'react-hot-toast';
 import {useDispatch, useSelector} from 'react-redux';
-import {Navigate, Route, BrowserRouter as Router, Routes} from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes
+} from 'react-router-dom';
 import Authentiocation from './layout/Authentication';
 import Layout from './layout/HomePage';
 import Home from './pages/Home';

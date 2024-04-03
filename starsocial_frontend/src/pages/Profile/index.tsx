@@ -33,18 +33,35 @@ const Profile = () => {
     setValue(newValue);
   };
   return (
-    <Card className='my-5 w-[70%] border border-slate-800 rounded-md' sx={{backgroundColor: 'transparent'}}>
+    <Card
+      className='my-5 w-[70%] border border-slate-800 rounded-md'
+      sx={{backgroundColor: 'transparent'}}
+    >
       <div className='rounded-md text-white'>
         <div className='h-[15rem]'>
-          <img src={user.background} className='w-full h-full rounded-t-md object-cover object-center' alt='' />
+          <img
+            src={user.background}
+            className='w-full h-full rounded-t-md object-cover object-center'
+            alt=''
+          />
         </div>
         <div className='px-5 flex justify-between items-start mt-5 h-[5rem]'>
-          <Avatar className='transform -translate-y-24' sx={{width: '10rem', height: '10rem'}} src={user.avatar} />
-          {true ? <ProfileModal user={user} /> : <Button variant='outlined'>Follow</Button>}
+          <Avatar
+            className='transform -translate-y-24'
+            sx={{width: '10rem', height: '10rem'}}
+            src={user.avatar}
+          />
+          {true ? (
+            <ProfileModal user={user} />
+          ) : (
+            <Button variant='outlined'>Follow</Button>
+          )}
         </div>
         <div className='p-5'>
           <div>
-            <h1 className='py-1 font-bold text-xl'>{user.firstName + ' ' + user.lastName}</h1>
+            <h1 className='py-1 font-bold text-xl'>
+              {user.firstName + ' ' + user.lastName}
+            </h1>
             <p>{user.gender}</p>
           </div>
           <div className='flex gap-2 items-center py-3'>
@@ -76,9 +93,7 @@ const Profile = () => {
             {value === 'posts' ? (
               <div className='space-y-5 w-[70%] my-10'>
                 {posts.map(index => (
-                  <div key={index}>
-                    <PostCard />
-                  </div>
+                  <div key={index}>{/* <PostCard /> */}</div>
                 ))}
               </div>
             ) : value === 'reels' ? (
