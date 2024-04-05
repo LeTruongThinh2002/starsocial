@@ -107,7 +107,7 @@ const CreatePostForm = ({user, children}: any) => {
           aria-labelledby='modal-modal-title'
           aria-describedby='modal-modal-description'
         >
-          <div className='modal lg:w-fit md:w-fit w-full'>
+          <div className='modal p-4 lg:w-fit md:w-fit w-full'>
             <Formik
               onSubmit={handleSubmit}
               initialValues={initialValues}
@@ -229,7 +229,7 @@ const CreatePostForm = ({user, children}: any) => {
                   variant='contained'
                   color='primary'
                 >
-                  Login
+                  Post
                 </Button>
               </Form>
             </Formik>

@@ -19,8 +19,7 @@ import com.letruongthinh.service.UserService;
 
 @RestController
 public class UserController {
-	
-	
+
 	@Autowired
 	UserRepository userRepository;
 	

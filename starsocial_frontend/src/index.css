@@ -43,10 +43,6 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
-  .swiper-button-prev,
-  .swiper-button-next {
-    background-color: red;
-  }
 }
 @tailwind components;
 @tailwind utilities;

@@ -68,7 +68,7 @@ const ProfileModal = ({user}: any) => {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <div className='modal lg:w-fit md:w-fit w-full'>
+        <div className='modal p-4 lg:w-fit md:w-fit w-full'>
           <Formik
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
@@ -89,7 +89,7 @@ const ProfileModal = ({user}: any) => {
                   src={user.avatar}
                 />
               </div>
-              <div className='flex flex-col gap-5 p-2'>
+              <div className='flex flex-col gap-5'>
                 <div>
                   <Field
                     as={TextField}
@@ -140,7 +140,7 @@ const ProfileModal = ({user}: any) => {
                 </div>
               </div>
 
-              <div className='p-2'>
+              <div>
                 <RadioGroup
                   onChange={event => handleChangeGenfer(event)}
                   row

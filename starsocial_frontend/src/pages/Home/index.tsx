@@ -11,14 +11,13 @@ import {SEARCH_USER_FAILURE} from '../../redux/auth/auth.actionType';
 import {getAllPostAction} from '../../redux/post/post.action';
 
 const story = [1, 2, 3, 4];
-// const post = [1, 2, 3, 4];
+
 const Home = () => {
   const {auth}: any = useSelector(store => store);
   const {post}: any = useSelector(store => store);
   const dispatch = useDispatch();
   useEffect(() => {
     getAllPostAction()(dispatch);
-    console.log(auth.user);
   }, [post.newComments, post.post]);
   useEffect(() => {
     dispatch({type: SEARCH_USER_FAILURE});

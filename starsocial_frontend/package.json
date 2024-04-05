@@ -18,6 +18,8 @@
     "@mui/lab": "^5.0.0-alpha.169",
     "@mui/material": "^5.15.14",
     "axios": "^1.6.8",
+    "cloudinary": "^2.1.0",
+    "crypto-js": "^4.2.0",
     "formik": "^2.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -33,6 +35,8 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^20.12.4",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

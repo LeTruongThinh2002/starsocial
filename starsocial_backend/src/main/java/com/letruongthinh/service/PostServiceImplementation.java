@@ -1,6 +1,7 @@
 package com.letruongthinh.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -8,14 +9,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.letruongthinh.models.Post;
 import com.letruongthinh.models.User;
+import com.letruongthinh.repository.CommentRepository;
 import com.letruongthinh.repository.PostRepository;
 import com.letruongthinh.repository.UserRepository;
 
 @Service
 public class PostServiceImplementation implements PostService{
 
+    private Cloudinary cloudinary;
+    
     @Autowired
     PostRepository postRepository;
 
@@ -24,6 +30,9 @@ public class PostServiceImplementation implements PostService{
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Override
     public Post createNewPost(Post post, Integer userId) throws Exception {
@@ -45,17 +54,68 @@ public class PostServiceImplementation implements PostService{
 
     @Override
     public String deletePost(Integer postId, Integer userId) throws Exception {
-        Post post = findPostById(postId);
-        User user = userService.findUserById(userId);
+    Post post = findPostById(postId);
 
-        if(post.getUser().getId()!=user.getId()){
-            throw new Exception("you are not the owner of this post");
-        }
-        
-        postRepository.delete(post);
-
-        return "post deleted successfully!";
+    // Kiểm tra quyền sở hữu
+    if (!post.getUser().getId().equals(userId)) {
+        throw new Exception("You are not the owner of this post");
     }
+
+    // Tìm tất cả người dùng đã lưu bài đăng và loại bỏ bài đăng khỏi danh sách savedPost của họ
+    List<User> users = userRepository.findBySavedPostContains(post);
+    for (User userSearch : users) {
+        userSearch.getSavedPost().remove(post);
+    }
+    userRepository.saveAll(users);
+
+    // Xóa hình ảnh và video từ Cloudinary
+    List<String> images = new ArrayList<>(post.getImage());
+    List<String> videos = new ArrayList<>(post.getVideo());
+    List<String> publicIdImages = new ArrayList<>();
+    List<String> publicIdVideos = new ArrayList<>();
+    if(!images.isEmpty()){
+        for (String url : images) {
+            if (url != null) {
+            String[] parts = url.split("/");
+            String fileName = parts[parts.length - 1];
+            String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
+            publicIdImages.add(publicId);
+            }
+        }
+    }
+    if(!videos.isEmpty()){
+        for (String url : videos) {
+            if (url != null) {
+            String[] parts = url.split("/");
+            String fileName = parts[parts.length - 1];
+            String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
+            publicIdVideos.add(publicId);
+            }
+        }
+    }
+
+    cloudinary = new Cloudinary(ObjectUtils.asMap(
+        "cloud_name", "dt5mw56za",
+        "api_key", "293213964299916",
+        "api_secret", "8gf645NF59FPQ80AtqZJD7iqnf0"
+    ));
+    if(!publicIdImages.isEmpty()){
+        for (String file : publicIdImages) {
+            cloudinary.uploader().destroy(file, ObjectUtils.asMap("resource_type", "image"));
+        }
+    }
+    if(!publicIdVideos.isEmpty()){
+        for (String file : publicIdVideos) {
+            cloudinary.uploader().destroy(file, ObjectUtils.asMap("resource_type", "video"));
+        }
+    }
+
+    // Xóa bài đăng
+    postRepository.delete(post);
+
+    return "Post deleted successfully!";
+    }
+
 
     @Override
     public List<Post> findAllPost() {
