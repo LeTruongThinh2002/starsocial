@@ -95,7 +95,6 @@ export const getProfileAction = () => async (dispatch: any) => {
     });
   } catch (error: any) {
     console.log('-------', error);
-    showToast(error.response.data.message, 'error');
     dispatch({type: GET_PROFILE_FAILURE, payload: error});
   }
 };
@@ -166,7 +165,11 @@ export const followUserAction = (userId2: any) => async (dispatch: any) => {
 export const savedPostAction = (postId: any) => async (dispatch: any) => {
   dispatch({type: SAVEDPOST_REQUEST});
   try {
-    const {data} = await api.put(`${API_URL_BASE}/api/posts/save/${postId}`);
+    const {post}: any = await api.put(
+      `${API_URL_BASE}/api/posts/save/${postId}`
+    );
+    const {data} = await api.get(`${API_URL_BASE}/api/users/profile`);
+
     dispatch({
       type: SAVEDPOST_SUCCESS,
       payload: data

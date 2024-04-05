@@ -65,17 +65,9 @@ export const authReducer = (state = initialState, action: ActionType) => {
     case GET_PROFILE_SUCCESS:
     case UPDATED_PROFILE_SUCCESS:
     case FOLLOW_USER_SUCCESS:
-      return {...state, user: action.payload, loading: false, error: null};
     case SAVEDPOST_SUCCESS:
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          savedPost: [...state.user.savedPost, action.payload]
-        },
-        loading: false,
-        error: null
-      };
+      return {...state, user: action.payload, loading: false, error: null};
+
     case GET_PROFILE_BY_ID_SUCCESS:
       return {...state, userById: action.payload, loading: false, error: null};
     case SEARCH_USER_SUCCESS:

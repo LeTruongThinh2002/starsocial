@@ -110,18 +110,21 @@ const Profile = () => {
               src={user?.avatar}
             />
             {user && auth.user.id === user?.id ? (
-              <ProfileModal user={user} />
+              <ProfileModal user={auth.user} />
             ) : user &&
               auth.user.followings.some((item: any) => item === user.id) ? (
               <Button
-                onClick={() => handleFollow(user.id)}
+                onClick={() => handleFollow(auth.user.id)}
                 variant='outlined'
                 color='error'
               >
                 Unfollow
               </Button>
             ) : (
-              <Button onClick={() => handleFollow(user.id)} variant='outlined'>
+              <Button
+                onClick={() => handleFollow(auth.user.id)}
+                variant='outlined'
+              >
                 Follow
               </Button>
             )}
@@ -164,7 +167,7 @@ const Profile = () => {
                   {postUser && user ? (
                     postUser.map((item: PostType) => (
                       <div key={item.id}>
-                        <PostCard user={user} post={item} />
+                        <PostCard user={auth.user} post={item} />
                       </div>
                     ))
                   ) : (
@@ -182,7 +185,7 @@ const Profile = () => {
                   {user && user.savedPost ? (
                     user.savedPost.map((item: PostType) => (
                       <div key={item.id}>
-                        <PostCard user={user} post={item} />
+                        <PostCard user={auth.user} post={item} />
                       </div>
                     ))
                   ) : (
