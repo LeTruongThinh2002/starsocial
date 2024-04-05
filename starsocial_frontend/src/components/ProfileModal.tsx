@@ -89,7 +89,7 @@ const ProfileModal = ({user}: any) => {
                   src={user.avatar}
                 />
               </div>
-              <div className='flex flex-col gap-5'>
+              <div className='flex flex-col gap-5 p-2'>
                 <div>
                   <Field
                     as={TextField}
@@ -140,7 +140,7 @@ const ProfileModal = ({user}: any) => {
                 </div>
               </div>
 
-              <div>
+              <div className='p-2'>
                 <RadioGroup
                   onChange={event => handleChangeGenfer(event)}
                   row
@@ -159,7 +159,7 @@ const ProfileModal = ({user}: any) => {
                   />
                 </RadioGroup>
               </div>
-              <div className='flex flex-row gap-3 justify-end'>
+              <div className='flex flex-row gap-3 p-2 justify-end'>
                 <Buttonjoy
                   variant='outlined'
                   type='submit'

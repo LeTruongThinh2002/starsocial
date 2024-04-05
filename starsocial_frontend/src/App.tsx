@@ -56,14 +56,7 @@ const App = () => {
                 </Layout>
               }
             />
-            <Route
-              path='/message'
-              element={
-                <Layout>
-                  <Message />
-                </Layout>
-              }
-            />
+            <Route path='/message' element={<Message />} />
             <Route path='*' element={<Navigate to='/' replace />} />
           </>
         ) : (
@@ -84,6 +77,7 @@ const App = () => {
                 </Authentiocation>
               }
             />
+            {/* <Route path='/message' element={<Message />} /> */}
             <Route path='*' element={<Navigate to='/login' replace />} />
           </>
         )}

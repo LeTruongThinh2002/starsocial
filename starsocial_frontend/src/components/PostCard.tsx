@@ -14,9 +14,15 @@ import Typography from '@mui/material/Typography';
 import {useState} from 'react';
 import {useDispatch} from 'react-redux';
 import {Link} from 'react-router-dom';
-import {createCommentAction, likePostAction} from '../redux/post/post.action';
+import {followUserAction, savedPostAction} from '../redux/auth/auth.action';
+import {
+  createCommentAction,
+  likeCommentAction,
+  likePostAction
+} from '../redux/post/post.action';
 import {getTimeAgo} from '../ultis/getTimeAgo';
 import PostMedia from './PostMedia';
+import PostModal from './PostModal';
 
 const PostCard = ({user, post}: any) => {
   const dispatch = useDispatch();
@@ -33,6 +39,18 @@ const PostCard = ({user, post}: any) => {
       createCommentAction(value, post.id)(dispatch);
     }
   };
+
+  const handleFollow = (userId: any) => {
+    followUserAction(userId)(dispatch);
+  };
+  const handleLikeComment = (commentId: any) => {
+    likeCommentAction(commentId)(dispatch);
+  };
+
+  const handleSavedPost = (postId: any) => {
+    savedPostAction(postId)(dispatch);
+  };
+
   return (
     <Card
       sx={{
@@ -50,12 +68,27 @@ const PostCard = ({user, post}: any) => {
           </IconButton>
         }
         title={
-          <Link
-            className='font-bold hover:text-sky-600'
-            to={`/profile/${post.user.id}`}
-          >
-            {post.user.firstName + ' ' + post.user.lastName}
-          </Link>
+          <>
+            <Link
+              className='font-bold hover:text-sky-600'
+              to={`/profile/${post.user.id}`}
+            >
+              {post.user.firstName + ' ' + post.user.lastName}{' '}
+            </Link>
+
+            {user.followings.some((item: any) => item === post.user.id) ||
+            user.id === post.user.id ? (
+              ''
+            ) : (
+              <span
+                onClick={() => handleFollow(post.user.id)}
+                className='text-sky-400 hover:text-sky-600 cursor-pointer text-sm font-bold'
+              >
+                {'- '}
+                Follow
+              </span>
+            )}
+          </>
         }
         subheader={
           new Date(post.createAt).toLocaleTimeString() +
@@ -65,7 +98,7 @@ const PostCard = ({user, post}: any) => {
         subheaderTypographyProps={{color: 'rgba(255, 255, 255, 0.5)'}}
         titleTypographyProps={{fontSize: '1rem'}}
       />
-      <div className=''>
+      <div className='h-[80vh]'>
         <PostMedia image={post.image} video={post.video} />
       </div>
       <CardContent>
@@ -100,6 +133,7 @@ const PostCard = ({user, post}: any) => {
             color='inherit'
             sx={{marginLeft: 'auto'}}
             aria-label='bookmark'
+            onClick={() => handleSavedPost(post.id)}
           >
             {user.savedPost?.some(
               (savedPost: any) => savedPost.id === post.id
@@ -147,18 +181,35 @@ const PostCard = ({user, post}: any) => {
                       </h4>
                       <p>{cmt.content}</p>
                     </div>
-                    <p>{getTimeAgo(cmt.createdAt)}</p>
+                    <p>
+                      {getTimeAgo(cmt.createdAt)}{' '}
+                      {cmt.liked.length > 0 ? `${cmt.liked.length} like` : ''}
+                    </p>
                   </div>
-                  <div className='cursor-pointer' style={{marginLeft: 'auto'}}>
-                    <FavoriteBorderRoundedIcon />
+                  <div
+                    onClick={() => handleLikeComment(cmt.id)}
+                    className='cursor-pointer'
+                    style={{marginLeft: 'auto'}}
+                  >
+                    {cmt.liked.some((item: any) => item.id === user.id) ? (
+                      <FavoriteRoundedIcon color='error' />
+                    ) : (
+                      <FavoriteBorderRoundedIcon />
+                    )}
                   </div>
                 </div>
               ))}
-            <div className='flex justify-center'>
-              <Link className='hover:text-sky-600' to={`/post/${post.id}`}>
-                See more...
-              </Link>
-            </div>
+            {post.comments.length > 5 && (
+              <PostModal
+                children={
+                  <div className='flex justify-center hover:text-sky-600'>
+                    See more...
+                  </div>
+                }
+                post={post}
+                user={user}
+              />
+            )}
           </div>
         </section>
       )}

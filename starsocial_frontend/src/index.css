@@ -23,7 +23,6 @@
     @apply text-white;
     @apply shadow-md;
     @apply rounded-lg;
-    @apply p-4;
   }
   /* latin */
   @font-face {
@@ -34,6 +33,19 @@
   }
   .playball-regular {
     font-family: 'Playball', cursive;
+  }
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .swiper-button-prev,
+  .swiper-button-next {
+    background-color: red;
   }
 }
 @tailwind components;

@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,7 +33,7 @@ public class Chat {
     private String chat_name;
     private String chat_image;
 
-    @JsonIgnore
+    @JsonIgnoreProperties("savedPost")
     @ManyToMany
     private List<User> users=new ArrayList<>();
     

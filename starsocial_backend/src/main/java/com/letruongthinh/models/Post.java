@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Basic;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -44,9 +46,11 @@ public class Post {
     @Column(length = 20000)
     private List<String> video;
 
+    @JsonIgnoreProperties("savedPost")
     @ManyToOne
     private User user;
 
+    @JsonIgnoreProperties("savedPost")
     @ManyToMany
     private List<User> liked=new ArrayList<>();
 

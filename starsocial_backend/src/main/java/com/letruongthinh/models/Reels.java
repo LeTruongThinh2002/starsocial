@@ -1,5 +1,7 @@
 package com.letruongthinh.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +28,7 @@ public class Reels {
     private String title;
     private String video;
 
+    @JsonIgnoreProperties("savedPost")
     @ManyToOne
     private User user;
     

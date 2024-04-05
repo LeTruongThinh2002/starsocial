@@ -120,7 +120,7 @@ const CreatePostForm = ({user, children}: any) => {
                       <Avatar sx={{bgcolor: 'transparent'}} aria-label='recipe'>
                         <img
                           src={user.avatar}
-                          className='object-coveer object-center'
+                          className='object-cover object-center'
                           alt=''
                         />
                       </Avatar>

@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import PostCard from '../../components/PostCard';
 import StoryCircle from '../../components/StoryCircle';
 import CreatePostForm from '../../forms/CreatePost';
+import {SEARCH_USER_FAILURE} from '../../redux/auth/auth.actionType';
 import {getAllPostAction} from '../../redux/post/post.action';
 
 const story = [1, 2, 3, 4];
@@ -17,9 +18,12 @@ const Home = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getAllPostAction()(dispatch);
+    console.log(auth.user);
   }, [post.newComments, post.post]);
+  useEffect(() => {
+    dispatch({type: SEARCH_USER_FAILURE});
+  }, []);
   // console.log(post);
-  const user = auth.user;
   return (
     <div className='bg-transparent w-3/4 py-5'>
       <section className='flex items-center p-5 rounded-b-md'>
@@ -39,9 +43,9 @@ const Home = () => {
 
       <Card sx={{backgroundColor: '#1f2937', color: 'white'}} className='p-5'>
         <div className='flex  justify-between gap-5'>
-          <Avatar src={user.avatar} />
+          <Avatar src={auth.user.avatar} />
           <CreatePostForm
-            user={user}
+            user={auth.user}
             children={
               <input
                 title='createPost'
@@ -57,7 +61,7 @@ const Home = () => {
         <div className='flex justify-center space-x-9'>
           <div className='flex items-center'>
             <CreatePostForm
-              user={user}
+              user={auth.user}
               children={
                 <>
                   <IconButton color='primary'>
@@ -70,7 +74,7 @@ const Home = () => {
           </div>
           <div className='flex items-center'>
             <CreatePostForm
-              user={user}
+              user={auth.user}
               children={
                 <>
                   <IconButton color='primary'>
@@ -83,7 +87,7 @@ const Home = () => {
           </div>
           <div className='flex items-center'>
             <CreatePostForm
-              user={user}
+              user={auth.user}
               children={
                 <>
                   <IconButton color='primary'>

@@ -5,12 +5,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.letruongthinh.config.JwtProvider;
 import com.letruongthinh.exceptions.UserException;
 import com.letruongthinh.models.User;
 import com.letruongthinh.repository.PostRepository;
 import com.letruongthinh.repository.UserRepository;
+
+import io.jsonwebtoken.lang.Collections;
 
 @Service
 public class UserServiceImplementation implements UserService {
@@ -109,8 +112,13 @@ public class UserServiceImplementation implements UserService {
 	}
 
 	@Override
-	public List<User> searchUser(String query) {
-		return userRepository.searchUser(query);
+	public List<User> searchUser(String query, Integer userId) {
+		if(StringUtils.hasText(query.trim())){
+		return userRepository.searchUser(query, userId);
+	}
+		else{
+			return Collections.emptyList();
+		}
 	}
 
 	@Override

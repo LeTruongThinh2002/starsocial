@@ -14,7 +14,11 @@ function Layout({children}: any) {
         <Grid
           lg={location.pathname === '/' ? 8 : 11}
           item
-          className='px-20 flex justify-center'
+          className={
+            location.pathname === '/message'
+              ? 'flex justify-center'
+              : 'px-20 flex justify-center'
+          }
           xs={12}
         >
           {children}

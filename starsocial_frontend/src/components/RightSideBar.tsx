@@ -9,7 +9,6 @@ const RightSideBar = () => {
       <div>
         <div className='flex justify-between py-5 items-center text-white'>
           <p className='font-semibold opacity-70'>Suggestions for you</p>
-          <p className='text-xs font-semibold opacity-95'>View all</p>
         </div>
         <div className='space-y-5'>
           {popularUser.map(index => (

@@ -3,6 +3,7 @@ package com.letruongthinh.models;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ public class Message {
     private String content;
     private String image;
 
+    @JsonIgnoreProperties("savedPost")
     @ManyToOne
     private User user;
 

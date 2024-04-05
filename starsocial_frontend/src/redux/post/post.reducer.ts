@@ -1,3 +1,4 @@
+import {ActionType} from '../auth/auth.reducer';
 import {
   CREATE_COMMENT_FAILURE,
   CREATE_COMMENT_REQUEST,
@@ -11,6 +12,9 @@ import {
   GET_USER_POST_FAILURE,
   GET_USER_POST_REQUEST,
   GET_USER_POST_SUCCESS,
+  LIKE_COMMENT_FAILURE,
+  LIKE_COMMENT_REQUEST,
+  LIKE_COMMENT_SUCCESS,
   LIKE_POST_FAILURE,
   LIKE_POST_REQUEST,
   LIKE_POST_SUCCESS
@@ -26,16 +30,12 @@ const initialState = {
   newComments: null
 };
 
-type ActionType = {
-  type: string;
-  payload: any;
-};
-
 export const postReducer = (state = initialState, action: ActionType) => {
   switch (action.type) {
     case GET_ALL_POST_REQUEST:
     case CREATE_POST_REQUEST:
     case LIKE_POST_REQUEST:
+    case LIKE_COMMENT_REQUEST:
     case GET_USER_POST_REQUEST:
     case CREATE_COMMENT_REQUEST:
       return {...state, loading: false, error: null};
@@ -55,8 +55,22 @@ export const postReducer = (state = initialState, action: ActionType) => {
         posts: [action.payload, ...state.posts],
         error: null
       };
+    case LIKE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        posts: state.posts.map((post: any) => {
+          const commentIndex = post.comments.findIndex(
+            (comment: any) => comment.id === action.payload.id
+          );
+          if (commentIndex !== -1) {
+            const updatedComments = [...post.comments];
+            updatedComments[commentIndex] = action.payload;
+            return {...post, comments: updatedComments};
+          }
+          return post;
+        })
+      };
     case GET_ALL_POST_SUCCESS:
-      // console.log(action.payload);
       return {
         ...state,
         loading: false,
@@ -86,9 +100,11 @@ export const postReducer = (state = initialState, action: ActionType) => {
     case GET_ALL_POST_FAILURE:
     case CREATE_POST_FAILURE:
     case LIKE_POST_FAILURE:
-    case GET_USER_POST_FAILURE:
+    case LIKE_COMMENT_FAILURE:
     case CREATE_COMMENT_FAILURE:
       return {...state, loading: false, error: action.payload};
+    case GET_USER_POST_FAILURE:
+      return {...state, post: null, loading: false, error: action.payload};
     default:
       return state;
   }

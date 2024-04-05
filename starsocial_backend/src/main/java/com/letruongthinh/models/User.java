@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,7 +43,7 @@ public class User {
 	private List<Integer>followers =new ArrayList<>();
 	private List<Integer>followings =new ArrayList<>();
 	
-	@JsonIgnore
+	@JsonIgnoreProperties(value={"savedPost"})
 	@ManyToMany
 	private List<Post>savedPost=new ArrayList<>();
 

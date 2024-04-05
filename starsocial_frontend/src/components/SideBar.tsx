@@ -11,7 +11,9 @@ import {useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
 import {SideMenu} from './SideMenu'; // Assuming SideMenu provides menu items
 
-const CTooltip = styled(({className, ...props}: TooltipProps) => <Tooltip {...props} classes={{popper: className}} />)({
+const CTooltip = styled(({className, ...props}: TooltipProps) => (
+  <Tooltip {...props} classes={{popper: className}} />
+))({
   [`& .${tooltipClasses.tooltip}`]: {
     fontSize: 15
   }
@@ -55,7 +57,12 @@ const SideBar = () => {
         <Link to='/' className=' text-white hover:bg-gray-700 rounded-full'>
           <CTooltip title={'Starsocial'} placement='right' arrow>
             <IconButton aria-label='Home' color='inherit'>
-              <img src='/page/moon-and-stars-svgrepo-com.svg' width={40} alt='home icon' title='home icon' />
+              <img
+                src='/page/moon-and-stars-svgrepo-com.svg'
+                width={40}
+                alt='home icon'
+                title='home icon'
+              />
             </IconButton>
           </CTooltip>
         </Link>
@@ -63,17 +70,31 @@ const SideBar = () => {
       <div className='flex-grow overflow-hidden'>
         <ul className='flex flex-col gap-6'>
           {SideMenu.map((item, index) => (
-            <li key={index} className='flex items-center justify-center cursor-pointer '>
-              <Link to={item.path} className='text-white hover:bg-gray-700 rounded-full'>
+            <li
+              key={index}
+              className='flex items-center justify-center cursor-pointer '
+            >
+              <Link
+                to={item.path}
+                className='text-white hover:bg-gray-700 rounded-full'
+              >
                 <CTooltip title={item.title} placement='right' arrow>
                   <IconButton color='inherit'>{item.icon}</IconButton>
                 </CTooltip>
               </Link>
             </li>
           ))}
+
           <li className='flex items-center justify-center cursor-pointer '>
-            <Link to={`/profile/${auth.user.id}`} className='text-white hover:bg-gray-700 rounded-full'>
-              <CTooltip title={`Profile - ${auth.user.firstName} ${auth.user.lastName}`} placement='right' arrow>
+            <Link
+              to={`/profile/${auth.user.id}`}
+              className='text-white hover:bg-gray-700 rounded-full'
+            >
+              <CTooltip
+                title={`Profile - ${auth.user.firstName} ${auth.user.lastName}`}
+                placement='right'
+                arrow
+              >
                 <IconButton color='inherit'>
                   <Avatar src={`${auth.user.avatar}`} />
                 </IconButton>
