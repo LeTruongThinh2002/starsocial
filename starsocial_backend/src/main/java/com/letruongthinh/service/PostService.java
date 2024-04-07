@@ -20,6 +20,6 @@ public interface PostService {
 
     Post likePost(Integer postId, Integer userId) throws Exception;
 
-
+    Post editPost(Post post, Integer userId) throws Exception;
 
 }

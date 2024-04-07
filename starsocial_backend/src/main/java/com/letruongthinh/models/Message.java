@@ -1,10 +1,12 @@
 package com.letruongthinh.models;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,7 +31,11 @@ public class Message {
     private Integer id;
 
     private String content;
-    private String image;
+
+    @Column(length = 20000)
+    private List<String> image;
+
+    private String video;
 
     @JsonIgnoreProperties("savedPost")
     @ManyToOne

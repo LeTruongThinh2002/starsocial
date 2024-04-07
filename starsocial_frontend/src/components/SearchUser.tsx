@@ -42,9 +42,8 @@ const SearchUser = () => {
         </div>
         {auth.searchUser.length > 0 &&
           auth.searchUser.map((item: any, index: any) => (
-            <Link to={`/profile/${item.id}`}>
+            <Link key={item.id} to={`/profile/${item.id}`}>
               <Card
-                key={item.id}
                 sx={{
                   backgroundColor: '#1f2937',
                   borderRadius: '40px',

@@ -88,7 +88,6 @@ export const authReducer = (state = initialState, action: ActionType) => {
       return {...state, userById: null, loading: false, error: action.payload};
     case SEARCH_USER_FAILURE:
       return {...state, searchUser: [], loading: false, error: action.payload};
-
     default:
       return state;
   }

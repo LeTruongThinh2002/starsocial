@@ -17,7 +17,7 @@ export const createMessage =
     dispatch({type: CREATE_MESSAGE_REQUEST});
     try {
       const {data} = await api.post(
-        `${API_URL_BASE}/api/message/chats/${chatId}`,
+        `${API_URL_BASE}/api/messages/chat/${chatId}`,
         message
       );
       dispatch({
@@ -31,10 +31,10 @@ export const createMessage =
     }
   };
 
-export const createChat = (chat: any) => async (dispatch: any) => {
+export const createChat = (userId: any) => async (dispatch: any) => {
   dispatch({type: CREATE_CHAT_REQUEST});
   try {
-    const {data} = await api.post(`${API_URL_BASE}/api/chats`, chat);
+    const {data} = await api.post(`${API_URL_BASE}/api/chats`, userId);
     dispatch({
       type: CREATE_CHAT_SUCCESS,
       payload: data

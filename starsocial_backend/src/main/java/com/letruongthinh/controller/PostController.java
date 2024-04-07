@@ -85,4 +85,11 @@ public class PostController {
         return new ResponseEntity<Post>(post,HttpStatus.ACCEPTED);
     }
 
+    @PostMapping("/api/posts/edit")
+    public ResponseEntity<Post>editPost(@RequestBody Post post,@RequestHeader("Authorization")String jwt) throws Exception{
+        User user=userService.findUserByJwt(jwt);
+        Post newPost=postService.editPost(post, user.getId());
+        return new ResponseEntity<Post>(newPost,HttpStatus.ACCEPTED);
+    }
+
 }

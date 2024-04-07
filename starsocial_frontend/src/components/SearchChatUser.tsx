@@ -12,15 +12,18 @@ import {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {searchUserAction} from '../redux/auth/auth.action';
 import {SEARCH_USER_FAILURE} from '../redux/auth/auth.actionType';
+import {createChat} from '../redux/message/message.action';
 
 const SearchChatUser = () => {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const {message, auth}: any = useSelector(store => store);
   const dispatch = useDispatch();
-  const handleClick = () => {
+  const handleClick = (value: any) => {
     dispatch({type: SEARCH_USER_FAILURE});
-    console.log('click');
+    if (!message.chats.includes(value)) {
+      createChat({userId: value})(dispatch);
+    }
   };
 
   const handleSearchUser = (e: any) => {
@@ -33,7 +36,8 @@ const SearchChatUser = () => {
       dispatch({type: SEARCH_USER_FAILURE});
     }
     setLoading(false);
-    // console.log(auth.searchUser);
+    console.log(auth.searchUser);
+    console.log(auth.user);
   };
 
   return (
@@ -50,6 +54,7 @@ const SearchChatUser = () => {
             color='primary'
             disableUnderline
             type='text'
+            id='search'
             value={username}
           />
           {loading && <CircularProgress sx={{color: 'white'}} size={24} />}
@@ -66,7 +71,7 @@ const SearchChatUser = () => {
               className='absolute w-full z-10 cursor-pointer'
               style={{top: `${5 + index * 5}rem`}}
               onClick={() => {
-                handleClick();
+                handleClick(item.id);
                 setUsername('');
               }}
             >
@@ -74,20 +79,16 @@ const SearchChatUser = () => {
                 avatar={<Avatar src={item.avatar} />}
                 title={item.firstName + ' ' + item.lastName}
                 subheader={
-                  item.followers.some((check: any) => check === auth.user.id) &&
-                  item.followings.some(
-                    (check: any) => check === auth.user.id
-                  ) ? (
+                  item.followings.includes(auth.user.id) &&
+                  auth.user.followings.includes(item.id) ? (
                     <span className='text-green-600'>Access chat!</span>
                   ) : (
                     <span className='text-red-500'>Denied chat!</span>
                   )
                 }
                 action={
-                  item.followers.some((check: any) => check === auth.user.id) &&
-                  item.followings.some(
-                    (check: any) => check === auth.user.id
-                  ) ? (
+                  item.followings.includes(auth.user.id) &&
+                  auth.user.followings.includes(item.id) ? (
                     <IconButton color='success'>
                       <SpeakerNotesRoundedIcon />
                     </IconButton>

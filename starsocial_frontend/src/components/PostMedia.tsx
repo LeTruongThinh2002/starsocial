@@ -27,7 +27,7 @@ const PostMedia = ({image, video}: any) => {
               <div className='flex items-center'>
                 <CardMedia
                   component='img'
-                  className='object-cover object-center'
+                  className='object-center'
                   image={img}
                   alt=''
                 />

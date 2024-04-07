@@ -5,6 +5,7 @@ import {
   CREATE_CHAT_SUCCESS,
   CREATE_MESSAGE_FAILURE,
   CREATE_MESSAGE_REQUEST,
+  CREATE_MESSAGE_SUCCESS,
   GET_ALL_CHAT_FAILURE,
   GET_ALL_CHAT_REQUEST,
   GET_ALL_CHAT_SUCCESS
@@ -28,7 +29,7 @@ const messageReducer = (state = initialState, action: ActionType) => {
         loading: false,
         error: null
       };
-    case CREATE_CHAT_SUCCESS:
+    case CREATE_MESSAGE_SUCCESS:
       return {
         ...state,
         message: action.payload,

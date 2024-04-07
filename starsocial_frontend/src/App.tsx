@@ -1,6 +1,6 @@
-import { useEffect } from 'react';
-import { Toaster } from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import {useEffect} from 'react';
+import {Toaster} from 'react-hot-toast';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   Navigate,
   Route,
@@ -15,7 +15,7 @@ import Message from './pages/Message';
 import Profile from './pages/Profile';
 import Reels from './pages/Reels';
 import Register from './pages/Register';
-import { getProfileAction } from './redux/auth/auth.action';
+import {getProfileAction} from './redux/auth/auth.action';
 
 const App = () => {
   const dispatch = useDispatch();
@@ -78,7 +78,7 @@ const App = () => {
               }
             />
             {/* <Route path='/message' element={<Message />} /> */}
-            <Route path='*' element={<Navigate to='/' replace />} />
+            <Route path='*' element={<Navigate to='/login' replace />} />
           </>
         )}
       </Routes>

@@ -111,20 +111,16 @@ const Profile = () => {
             />
             {user && auth.user.id === user?.id ? (
               <ProfileModal user={auth.user} />
-            ) : user &&
-              auth.user.followings.some((item: any) => item === user.id) ? (
+            ) : user && auth.user.followings.includes(user.id) ? (
               <Button
-                onClick={() => handleFollow(auth.user.id)}
+                onClick={() => handleFollow(user.id)}
                 variant='outlined'
                 color='error'
               >
                 Unfollow
               </Button>
             ) : (
-              <Button
-                onClick={() => handleFollow(auth.user.id)}
-                variant='outlined'
-              >
+              <Button onClick={() => handleFollow(user.id)} variant='outlined'>
                 Follow
               </Button>
             )}

@@ -1,9 +1,9 @@
-import {Comment, MoreVert, Share} from '@mui/icons-material';
+import {Check, Close, Comment, Share} from '@mui/icons-material';
 import BookmarkAddedRoundedIcon from '@mui/icons-material/BookmarkAddedRounded';
 import BookmarkBorderRoundedIcon from '@mui/icons-material/BookmarkBorderRounded';
 import FavoriteBorderRoundedIcon from '@mui/icons-material/FavoriteBorderRounded';
 import FavoriteRoundedIcon from '@mui/icons-material/FavoriteRounded';
-import {Divider} from '@mui/material';
+import {Divider, TextField} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -17,16 +17,30 @@ import {Link} from 'react-router-dom';
 import {followUserAction, savedPostAction} from '../redux/auth/auth.action';
 import {
   createCommentAction,
+  editPostAction,
   likeCommentAction,
   likePostAction
 } from '../redux/post/post.action';
 import {getTimeAgo} from '../ultis/getTimeAgo';
+import MenuPost from './MenuPost';
 import PostMedia from './PostMedia';
 import PostModal from './PostModal';
 
 const PostCard = ({user, post}: any) => {
   const dispatch = useDispatch();
   const [showComments, setShowComments] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const [content, setContent] = useState(post.caption);
+
+  const handleSetEdit = () => {
+    setContent(post.caption);
+    setEdit(!edit);
+  };
+  const handleEdit = () => {
+    const newPost = {id: post.id, caption: content};
+    editPostAction(newPost)(dispatch);
+    setEdit(!edit);
+  };
   const handleLikePost = () => {
     likePostAction(post.id)(dispatch);
   };
@@ -63,9 +77,9 @@ const PostCard = ({user, post}: any) => {
       <CardHeader
         avatar={<Avatar src={`${post.user.avatar}`} />}
         action={
-          <IconButton color='inherit' aria-label='settings'>
-            <MoreVert />
-          </IconButton>
+          user.id === post.user.id && (
+            <MenuPost handleSetEdit={handleSetEdit} postId={post.id} />
+          )
         }
         title={
           <>
@@ -98,14 +112,63 @@ const PostCard = ({user, post}: any) => {
         subheaderTypographyProps={{color: 'rgba(255, 255, 255, 0.5)'}}
         titleTypographyProps={{fontSize: '1rem'}}
       />
+      <CardContent>
+        {edit === false ? (
+          <Typography variant='body1' color='inherits'>
+            {post.caption}
+          </Typography>
+        ) : (
+          <>
+            <TextField
+              name='caption'
+              label='Caption'
+              type='text'
+              onChange={e => setContent(e.target.value)}
+              onKeyPress={e => {
+                if (e.key === 'Enter') {
+                  handleEdit();
+                }
+              }}
+              fullWidth
+              multiline={true}
+              rows={4}
+              sx={{
+                // Chỉnh màu label
+                '& .MuiInputLabel-root': {
+                  color: '#9ea4c0'
+                },
+                '& .MuiOutlinedInput-root': {
+                  '& fieldset': {
+                    borderColor: '#374151'
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#B2BAC2'
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#6F7E8C'
+                  }
+                },
+                '& .MuiInputBase-input': {
+                  color: 'rgb(255, 255, 255)'
+                }
+              }}
+              variant='outlined'
+              defaultValue={content}
+            />
+            <div className='w-full flex justify-end gap-3'>
+              <IconButton onClick={handleSetEdit} size='large' color='error'>
+                <Close fontSize='inherit' />
+              </IconButton>
+              <IconButton onClick={handleEdit} size='large' color='info'>
+                <Check fontSize='inherit' />
+              </IconButton>
+            </div>
+          </>
+        )}
+      </CardContent>
       <div className='h-[80vh]'>
         <PostMedia image={post.image} video={post.video} />
       </div>
-      <CardContent>
-        <Typography variant='body1' color='inherits'>
-          {post.caption}
-        </Typography>
-      </CardContent>
       <CardActions disableSpacing className='flex flex-col w-full'>
         <div className='flex flex-row w-full'>
           <IconButton

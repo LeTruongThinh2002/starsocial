@@ -6,6 +6,12 @@ import {
   CREATE_POST_FAILURE,
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
+  DELETE_POST_FAILURE,
+  DELETE_POST_REQUEST,
+  DELETE_POST_SUCCESS,
+  EDIT_POST_FAILURE,
+  EDIT_POST_REQUEST,
+  EDIT_POST_SUCCESS,
   GET_ALL_POST_FAILURE,
   GET_ALL_POST_REQUEST,
   GET_ALL_POST_SUCCESS,
@@ -38,6 +44,8 @@ export const postReducer = (state = initialState, action: ActionType) => {
     case LIKE_COMMENT_REQUEST:
     case GET_USER_POST_REQUEST:
     case CREATE_COMMENT_REQUEST:
+    case DELETE_POST_REQUEST:
+    case EDIT_POST_REQUEST:
       return {...state, loading: false, error: null};
     case GET_USER_POST_SUCCESS:
       return {
@@ -90,6 +98,22 @@ export const postReducer = (state = initialState, action: ActionType) => {
         loading: false,
         error: null
       };
+    case DELETE_POST_SUCCESS:
+      return {
+        ...state,
+        posts: state.posts.filter((post: any) => post.id !== action.payload),
+        loading: false,
+        error: null
+      };
+    case EDIT_POST_SUCCESS:
+      return {
+        ...state,
+        posts: state.posts.map((post: any) =>
+          post.id === action.payload.id ? action.payload : post
+        ),
+        loading: false,
+        error: null
+      };
     case CREATE_COMMENT_SUCCESS:
       return {
         ...state,
@@ -101,6 +125,8 @@ export const postReducer = (state = initialState, action: ActionType) => {
     case CREATE_POST_FAILURE:
     case LIKE_POST_FAILURE:
     case LIKE_COMMENT_FAILURE:
+    case DELETE_POST_FAILURE:
+    case EDIT_POST_FAILURE:
     case CREATE_COMMENT_FAILURE:
       return {...state, loading: false, error: action.payload};
     case GET_USER_POST_FAILURE:

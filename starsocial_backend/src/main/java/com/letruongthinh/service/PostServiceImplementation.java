@@ -169,5 +169,20 @@ public class PostServiceImplementation implements PostService{
 
         return post;
     }
+
+    @Override
+    public Post editPost(Post post, Integer userId) throws Exception {
+        Post OldPost = findPostById(post.getId());
+        if (!OldPost.getUser().getId().equals(userId)) {
+            throw new Exception("You are not the owner of this post");
+        }
+
+        OldPost.setCaption(post.getCaption());
+        postRepository.save(OldPost);
+
+        return OldPost;
+    }
+
+    
     
 }

@@ -7,6 +7,12 @@ import {
   CREATE_POST_FAILURE,
   CREATE_POST_REQUEST,
   CREATE_POST_SUCCESS,
+  DELETE_POST_FAILURE,
+  DELETE_POST_REQUEST,
+  DELETE_POST_SUCCESS,
+  EDIT_POST_FAILURE,
+  EDIT_POST_REQUEST,
+  EDIT_POST_SUCCESS,
   GET_ALL_POST_FAILURE,
   GET_ALL_POST_REQUEST,
   GET_ALL_POST_SUCCESS,
@@ -125,5 +131,37 @@ export const likeCommentAction = (commentId: any) => async (dispatch: any) => {
     console.log('error ----', error);
     showToast(error.response.data.message, 'error');
     dispatch({type: LIKE_COMMENT_FAILURE, payload: error});
+  }
+};
+
+export const editPostAction = (post: any) => async (dispatch: any) => {
+  dispatch({type: EDIT_POST_REQUEST});
+  try {
+    const {data} = await api.post(`${API_URL_BASE}/api/posts/edit`, post);
+    dispatch({
+      type: EDIT_POST_SUCCESS,
+      payload: data
+    });
+    showToast('Edit post completed!', 'success');
+  } catch (error: any) {
+    console.log('error ----', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: EDIT_POST_FAILURE, payload: error});
+  }
+};
+
+export const deletePostAction = (postId: any) => async (dispatch: any) => {
+  dispatch({type: DELETE_POST_REQUEST});
+  try {
+    const {data} = await api.delete(`${API_URL_BASE}/api/posts/${postId}`);
+    showToast(data.message, 'success');
+    dispatch({
+      type: DELETE_POST_SUCCESS,
+      payload: postId
+    });
+  } catch (error: any) {
+    console.log('error ----', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: DELETE_POST_FAILURE, payload: error});
   }
 };

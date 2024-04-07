@@ -33,6 +33,7 @@ public class MessageServiceImplementation implements MessageService{
         message.setChat(chat);
         message.setContent(req.getContent());
         message.setImage(req.getImage());
+        message.setVideo(req.getVideo());
         message.setUser(user);
         message.setTimestamp(LocalDateTime.now());
 

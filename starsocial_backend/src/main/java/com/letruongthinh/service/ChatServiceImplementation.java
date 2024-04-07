@@ -19,6 +19,14 @@ public class ChatServiceImplementation implements ChatService {
 
     @Override
     public Chat createChat(User reqUser, User user) {
+        // Kiểm tra xem user1 (reqUser) có theo dõi user2 không và ngược lại
+        boolean user1FollowsUser2 = user.getFollowers().contains(reqUser.getId());
+        boolean user2FollowsUser1 = reqUser.getFollowers().contains(user.getId());
+
+        if (!user1FollowsUser2 || !user2FollowsUser1) {
+            // Nếu không có mối quan hệ theo dõi lẫn nhau, không tạo cuộc trò chuyện
+            throw new IllegalArgumentException("Both users must follow each other to create a chat.");
+        }
         Chat isExist = chatRepository.findChatByUsersId(user, reqUser);
 
         if(isExist!=null) {
