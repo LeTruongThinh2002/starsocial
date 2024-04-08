@@ -1,7 +1,9 @@
 import {Image, Videocam} from '@mui/icons-material';
 import {
   Avatar,
+  Backdrop,
   CardHeader,
+  CircularProgress,
   IconButton,
   ImageList,
   ImageListItem,
@@ -32,6 +34,7 @@ const CreatePostForm = ({user, children}: any) => {
   const [video, setVideo] = useState(['']);
   const [reviewImg, setReviewImg] = useState(['']);
   const [reviewVideo, setReviewVideo] = useState(['']);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const [open, setOpen] = useState(false);
@@ -46,6 +49,7 @@ const CreatePostForm = ({user, children}: any) => {
   };
 
   const handleUploadImage = async (value: any) => {
+    setLoading(true);
     if (value.length > 6) {
       showToast('Image upload limits is 5', 'error');
     } else {
@@ -64,9 +68,12 @@ const CreatePostForm = ({user, children}: any) => {
       }
       setFile(value);
     }
+    setLoading(false);
   };
   const handleUploadVideo = async (value: any) => {
-    if (value.length > 4) {
+    setLoading(true);
+
+    if (value.length > 3) {
       showToast('Video upload limits is 3', 'error');
     } else {
       let urls: string[] = [];
@@ -75,7 +82,7 @@ const CreatePostForm = ({user, children}: any) => {
           const reader = new FileReader();
           reader.onload = () => {
             urls.push(reader.result as string);
-            setReviewVideo(urls);
+            setReviewVideo([...urls]);
           };
           reader.readAsDataURL(file);
         } catch (error) {
@@ -84,15 +91,19 @@ const CreatePostForm = ({user, children}: any) => {
       }
       setVideo(value);
     }
+    setLoading(false);
   };
 
   const handleSubmit = async (value: any) => {
+    handleClose();
+    setLoading(true);
+
     value.image = await uploadToCLoudinary(file, 'image');
     value.video = await uploadToCLoudinary(video, 'video');
 
     console.log('hanlde submit', value);
     createPostAction(value)(dispatch);
-    handleClose();
+    setLoading(false);
   };
 
   return (
@@ -106,6 +117,7 @@ const CreatePostForm = ({user, children}: any) => {
           onClose={handleClose}
           aria-labelledby='modal-modal-title'
           aria-describedby='modal-modal-description'
+          sx={{zIndex: 1500}}
         >
           <div className='modal p-4 lg:w-fit md:w-fit w-full'>
             <Formik
@@ -235,6 +247,12 @@ const CreatePostForm = ({user, children}: any) => {
             </Formik>
           </div>
         </Modal>
+        <Backdrop
+          sx={{color: '#fff', zIndex: 1400, position: 'absolute'}}
+          open={loading}
+        >
+          <CircularProgress color='inherit' />
+        </Backdrop>
       </div>
     </>
   );

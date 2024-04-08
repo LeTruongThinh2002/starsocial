@@ -5,11 +5,18 @@ import {
   VideoCameraBackRounded,
   West
 } from '@mui/icons-material';
-import {Avatar, Grid, IconButton} from '@mui/material';
-import {useEffect, useState} from 'react';
+import {
+  Avatar,
+  Backdrop,
+  CircularProgress,
+  Grid,
+  IconButton
+} from '@mui/material';
+import {Stomp} from '@stomp/stompjs';
+import {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Link} from 'react-router-dom';
-
+import SockJS from 'sockjs-client';
 import ChatMessage from '../../components/ChatMessage';
 import ChatUserCard from '../../components/ChatUserCard';
 import SearchChatUser from '../../components/SearchChatUser';
@@ -28,8 +35,57 @@ const Message = () => {
   const [video, setVideo] = useState(['']);
   const [reviewImg, setReviewImg] = useState(['']);
   const [reviewVideo, setReviewVideo] = useState(['']);
+  const [stompClient, setStompClient] = useState<any>();
+  const chatContainerRef = useRef<any>(null);
+
+  useEffect(() => {
+    const sock = new SockJS('http://localhost:8888/ws');
+    const stomp = Stomp.over(sock);
+    setStompClient(stomp);
+    stomp.connect({}, onConnect, onErr);
+  }, []);
+
+  const onConnect = () => {
+    console.log('onConnect');
+  };
+  const onErr = () => {
+    console.log('onError');
+  };
+
+  useEffect(() => {
+    if (stompClient && auth.user && currentChat) {
+      const subscription = stompClient.subscribe(
+        `/user/${currentChat.id}/private`,
+        onMessageReceived
+      );
+    }
+  }, [currentChat]);
+
+  const sendMessageToServer = (newMessage: any) => {
+    if (stompClient && newMessage) {
+      stompClient.send(
+        `/app/chat/${currentChat.id.toString()}`,
+        {},
+        JSON.stringify(newMessage)
+      );
+    }
+  };
+
+  const onMessageReceived = (payload: any) => {
+    const receivedMessage = JSON.parse(payload.body);
+    console.log('message received from websocket', receivedMessage);
+    setMessages([...messages, receivedMessage]);
+  };
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleUploadImage = async (value: any) => {
+    setLoading(true);
     if (value.length > 6) {
       showToast('Image limits is 5', 'error');
     } else {
@@ -48,8 +104,11 @@ const Message = () => {
       }
       setImage(value);
     }
+    setLoading(false);
   };
   const handleUploadVideo = async (value: any) => {
+    setLoading(true);
+
     let urls: string[] = [];
     for (const file of value) {
       try {
@@ -64,6 +123,7 @@ const Message = () => {
       }
     }
     setVideo(value);
+    setLoading(false);
   };
   useEffect(() => {
     dispatch({type: SEARCH_USER_FAILURE});
@@ -86,15 +146,20 @@ const Message = () => {
 
   const handleCreateMessage = async (value: any) => {
     if (currentChat) {
+      setLoading(true);
       let message = {
         chatId: currentChat.id,
         content: value,
         image: [''],
         video: ''
       };
+
       message.image = await uploadToCLoudinary(image, 'image');
+
       message.video = (await uploadToCLoudinary(video, 'video'))[0];
-      createMessage(message, message.chatId)(dispatch);
+
+      createMessage({message, sendMessageToServer})(dispatch);
+      setLoading(false);
     }
   };
 
@@ -160,7 +225,10 @@ const Message = () => {
                     </IconButton>
                   </div>
                 </div>
-                <div className='no-scrollbar overflow-y-scroll h-[82vh] px-2 space-y-5 lg:py-16 xl:py-10 py-16'>
+                <div
+                  ref={chatContainerRef}
+                  className='no-scrollbar overflow-y-scroll h-[82vh] px-2 space-y-5 lg:py-16 xl:py-10 py-16'
+                >
                   {messages &&
                     messages.length > 0 &&
                     messages.map((msg: any) => (
@@ -228,6 +296,12 @@ const Message = () => {
           )}
         </Grid>
       </Grid>
+      <Backdrop
+        sx={{color: '#fff', zIndex: theme => theme.zIndex.drawer + 1}}
+        open={loading}
+      >
+        <CircularProgress color='inherit' />
+      </Backdrop>
     </div>
   );
 };

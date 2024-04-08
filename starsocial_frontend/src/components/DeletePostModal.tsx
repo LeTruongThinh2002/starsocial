@@ -6,12 +6,11 @@ import {deletePostAction} from '../redux/post/post.action';
 
 const DeletePostModal = ({postId, children, handleCloseModal}: any) => {
   const dispatch = useDispatch();
-
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleDeletePost = () => {
-    deletePostAction(postId)(dispatch);
     handleCloseModal();
+    deletePostAction(postId)(dispatch);
   };
 
   return (

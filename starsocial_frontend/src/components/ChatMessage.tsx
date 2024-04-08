@@ -22,6 +22,7 @@ const ChatMessage = ({messages}: any) => {
           {messages.image[0] !== null &&
             messages.image.map((item: string) => (
               <ViewImageModal
+                key={item}
                 children={
                   <img
                     className='object-cover object-center'

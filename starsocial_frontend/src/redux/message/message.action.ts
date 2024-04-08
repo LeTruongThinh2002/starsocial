@@ -12,24 +12,24 @@ import {
   GET_ALL_CHAT_SUCCESS
 } from './message.actionType';
 
-export const createMessage =
-  (message: any, chatId: any) => async (dispatch: any) => {
-    dispatch({type: CREATE_MESSAGE_REQUEST});
-    try {
-      const {data} = await api.post(
-        `${API_URL_BASE}/api/messages/chat/${chatId}`,
-        message
-      );
-      dispatch({
-        type: CREATE_MESSAGE_SUCCESS,
-        payload: data
-      });
-    } catch (error: any) {
-      console.log('-------', error);
-      showToast(error.response.data.message, 'error');
-      dispatch({type: CREATE_MESSAGE_FAILURE, payload: error});
-    }
-  };
+export const createMessage = (reqData: any) => async (dispatch: any) => {
+  dispatch({type: CREATE_MESSAGE_REQUEST});
+  try {
+    const {data} = await api.post(
+      `${API_URL_BASE}/api/messages/chat/${reqData.message.chatId}`,
+      reqData.message
+    );
+    reqData.sendMessageToServer(data);
+    dispatch({
+      type: CREATE_MESSAGE_SUCCESS,
+      payload: data
+    });
+  } catch (error: any) {
+    console.log('-------', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: CREATE_MESSAGE_FAILURE, payload: error});
+  }
+};
 
 export const createChat = (userId: any) => async (dispatch: any) => {
   dispatch({type: CREATE_CHAT_REQUEST});

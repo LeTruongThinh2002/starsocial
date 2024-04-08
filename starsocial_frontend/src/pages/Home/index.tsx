@@ -15,6 +15,7 @@ const story = [1, 2, 3, 4];
 const Home = () => {
   const {auth}: any = useSelector(store => store);
   const {post}: any = useSelector(store => store);
+
   const dispatch = useDispatch();
   useEffect(() => {
     getAllPostAction()(dispatch);

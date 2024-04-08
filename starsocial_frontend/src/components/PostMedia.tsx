@@ -28,6 +28,7 @@ const PostMedia = ({image, video}: any) => {
                 <CardMedia
                   component='img'
                   className='object-center'
+                  width={'100%'}
                   image={img}
                   alt=''
                 />
@@ -43,8 +44,9 @@ const PostMedia = ({image, video}: any) => {
                   src={vdo}
                   controls
                   controlsList='nodownload'
-                  className=' object-cover object-center'
+                  className='object-center'
                   // autoPlay
+                  width={'100%'}
                   loop
                   muted
                 />

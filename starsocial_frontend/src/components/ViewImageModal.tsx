@@ -1,4 +1,4 @@
-import {Close} from '@mui/icons-material';
+import {CancelRounded} from '@mui/icons-material';
 import {IconButton, Modal} from '@mui/material';
 import {useState} from 'react';
 
@@ -32,12 +32,12 @@ const ViewImageModal = ({image, video, children}: any) => {
                 right: '10px',
                 zIndex: '100'
               }}
-              color='primary'
+              color='error'
               onClick={handleClose}
               aria-label='close'
               size='large'
             >
-              <Close fontSize='inherit' />
+              <CancelRounded fontSize='inherit' />
             </IconButton>
           </div>
           {image && (
