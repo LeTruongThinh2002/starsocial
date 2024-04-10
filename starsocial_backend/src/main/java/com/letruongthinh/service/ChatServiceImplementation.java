@@ -7,14 +7,19 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.letruongthinh.models.Chat;
 import com.letruongthinh.models.Message;
 import com.letruongthinh.models.User;
 import com.letruongthinh.repository.ChatRepository;
 import com.letruongthinh.repository.MessageRepository;
+import com.letruongthinh.request.EditChatImage;
 
 @Service
 public class ChatServiceImplementation implements ChatService {
+
+    private Cloudinary cloudinary;
 
     @Autowired
     private ChatRepository chatRepository;
@@ -81,6 +86,47 @@ public class ChatServiceImplementation implements ChatService {
             }else{
                 return "chat not found for id " + chatId;
             }
+    }
+
+    @Override
+    public Chat editChatImage(EditChatImage reqChat, User reqUser) throws Exception {
+        
+        Optional<Chat> chatOpt = chatRepository.findById(reqChat.getChatId());
+
+        if(chatOpt.isPresent()){
+            Chat chat = chatOpt.get();
+            List<User> users = chat.getUsers();
+            if(users.contains(reqUser)){
+
+                if(chat.getChat_image().isEmpty()){
+                    chat.setChat_image(reqChat.getChat_image());
+                    chatRepository.save(chat);
+                    return chat;
+                } else {
+                    String[] parts = chat.getChat_image().split("/");
+                    String fileName = parts[parts.length - 1];
+                    String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
+
+                    cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dd0tbhnzl",
+                    "api_key", "234868554266692",
+                    "api_secret", "fy7mChtdmnKGQ6MVOxldJdSyqAI"
+                    ));
+
+                    if(!publicId.isEmpty()){
+                        cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", "image"));
+                    }
+
+                    chat.setChat_image(reqChat.getChat_image());
+                    chatRepository.save(chat);
+                    return chat;
+                }
+            }else {
+                throw new Exception("You do not have permission to edit this chat.");
+            }
+        }else{
+            throw new Exception("chat not found for id " + reqChat.getChatId());
+        }   
     }
 
     

@@ -13,6 +13,9 @@ import {
   DELETE_MESSAGE_FAILURE,
   DELETE_MESSAGE_REQUEST,
   DELETE_MESSAGE_SUCCESS,
+  EDIT_CHAT_IMAGE_FAILURE,
+  EDIT_CHAT_IMAGE_REQUEST,
+  EDIT_CHAT_IMAGE_SUCCESS,
   GET_ALL_CHAT_FAILURE,
   GET_ALL_CHAT_REQUEST,
   GET_ALL_CHAT_SUCCESS
@@ -83,6 +86,22 @@ export const deletedMessage = (messageId: any) => async (dispatch: any) => {
     console.log('-------', error);
     showToast(error.response.data.message, 'error');
     dispatch({type: DELETE_MESSAGE_FAILURE, payload: error});
+  }
+};
+
+export const editChatImage = (chat: any) => async (dispatch: any) => {
+  dispatch({type: EDIT_CHAT_IMAGE_REQUEST});
+  try {
+    const {data} = await api.put(`${API_URL_BASE}/api/chats`, chat);
+    dispatch({
+      type: EDIT_CHAT_IMAGE_SUCCESS,
+      payload: data
+    });
+    showToast('change chat image successfully!', 'success');
+  } catch (error: any) {
+    console.log('-------', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: EDIT_CHAT_IMAGE_FAILURE, payload: error});
   }
 };
 

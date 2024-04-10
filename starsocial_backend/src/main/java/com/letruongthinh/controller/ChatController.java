@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.letruongthinh.models.Chat;
 import com.letruongthinh.models.User;
 import com.letruongthinh.request.CreateChatRequest;
+import com.letruongthinh.request.EditChatImage;
 import com.letruongthinh.service.ChatService;
 import com.letruongthinh.service.UserService;
 
@@ -49,5 +51,13 @@ public class ChatController {
         
         String message=chatService.deleteChat(chatId, reqUser);
         return message;
+    }
+
+    @PutMapping("/api/chats")
+    public Chat editChatImage(@RequestHeader("Authorization") String jwt,@RequestBody EditChatImage reqChat) throws Exception{
+        User reqUser=userService.findUserByJwt(jwt);
+        
+        Chat newChat = chatService.editChatImage(reqChat, reqUser);
+        return newChat;
     }
 }

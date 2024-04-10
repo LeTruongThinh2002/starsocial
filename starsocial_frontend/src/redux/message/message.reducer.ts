@@ -12,6 +12,9 @@ import {
   DELETE_MESSAGE_FAILURE,
   DELETE_MESSAGE_REQUEST,
   DELETE_MESSAGE_SUCCESS,
+  EDIT_CHAT_IMAGE_FAILURE,
+  EDIT_CHAT_IMAGE_REQUEST,
+  EDIT_CHAT_IMAGE_SUCCESS,
   GET_ALL_CHAT_FAILURE,
   GET_ALL_CHAT_REQUEST,
   GET_ALL_CHAT_SUCCESS
@@ -32,6 +35,7 @@ const messageReducer = (state = initialState, action: ActionType) => {
     case GET_ALL_CHAT_REQUEST:
     case DELETE_CHAT_REQUEST:
     case DELETE_MESSAGE_REQUEST:
+    case EDIT_CHAT_IMAGE_REQUEST:
       return {
         ...state,
         loading: false,
@@ -76,12 +80,22 @@ const messageReducer = (state = initialState, action: ActionType) => {
         loading: false,
         error: null
       };
-
+    case EDIT_CHAT_IMAGE_SUCCESS:
+      return {
+        ...state,
+        chats: state.chats.map((chat: any) =>
+          chat.id === action.payload.id ? action.payload : chat
+        ),
+        message: null,
+        loading: false,
+        error: null
+      };
     case CREATE_CHAT_FAILURE:
     case CREATE_MESSAGE_FAILURE:
     case GET_ALL_CHAT_FAILURE:
     case DELETE_CHAT_FAILURE:
     case DELETE_MESSAGE_FAILURE:
+    case EDIT_CHAT_IMAGE_FAILURE:
       return {
         ...state,
         loading: false,

@@ -1,7 +1,6 @@
 import {
-  AddIcCall,
   Image,
-  VideoCall,
+  MmsRounded,
   VideoCameraBackRounded,
   West
 } from '@mui/icons-material';
@@ -21,7 +20,11 @@ import ChatMessage from '../../components/ChatMessage';
 import ChatUserCard from '../../components/ChatUserCard';
 import SearchChatUser from '../../components/SearchChatUser';
 import {SEARCH_USER_FAILURE} from '../../redux/auth/auth.actionType';
-import {createMessage, getAllChat} from '../../redux/message/message.action';
+import {
+  createMessage,
+  editChatImage,
+  getAllChat
+} from '../../redux/message/message.action';
 import {showToast} from '../../ultis/showToast';
 import {uploadToCLoudinary} from '../../ultis/uploadToCloudinary';
 
@@ -188,6 +191,17 @@ const Message = () => {
     }
   };
 
+  const handleEditChatImage = async (image: any) => {
+    setLoading(true);
+    const chat_image = (await uploadToCLoudinary(image, 'image'))[0];
+    const reqChat = {
+      chatId: currentChat.id,
+      chat_image
+    };
+    await editChatImage(reqChat)(dispatch);
+    setLoading(false);
+  };
+
   return (
     <div className='bg-black w-full'>
       <Grid
@@ -250,18 +264,29 @@ const Message = () => {
                   </Link>
 
                   <div className='flex space-x-3'>
-                    <IconButton color='inherit'>
-                      <AddIcCall />
-                    </IconButton>
-                    <IconButton color='inherit'>
-                      <VideoCall />
-                    </IconButton>
+                    <input
+                      id='chat_image'
+                      name='chat_image'
+                      type='file'
+                      accept='image/*'
+                      onChange={(e: any) => handleEditChatImage(e.target.files)}
+                      className='hidden'
+                    />
+                    <label className='bg-sky-500' htmlFor='chat_image'>
+                      <IconButton color='inherit'>
+                        <MmsRounded />
+                      </IconButton>
+                    </label>
                   </div>
                 </div>
                 <div
                   ref={chatContainerRef}
                   onScroll={handleScroll}
-                  className='no-scrollbar overflow-y-scroll h-[82vh] px-2 space-y-5 lg:py-16 xl:py-10 py-16'
+                  className={`no-scrollbar ${
+                    currentChat.chat_image
+                      ? `bg-[url('${currentChat.chat_image}')]`
+                      : `bg-black`
+                  } overflow-y-scroll h-[82vh] px-2 space-y-5 lg:py-16 xl:py-10 py-16`}
                 >
                   {messages &&
                     messages.length > 0 &&
