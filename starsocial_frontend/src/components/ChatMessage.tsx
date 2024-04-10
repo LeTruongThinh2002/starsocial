@@ -1,19 +1,30 @@
-import { PlayCircleRounded } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import {Delete, PlayCircleRounded} from '@mui/icons-material';
+import {IconButton} from '@mui/material';
+import {useState} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {deletedMessage} from '../redux/message/message.action';
 import ViewImageModal from './ViewImageModal';
 
 const ChatMessage = ({messages}: any) => {
   const {auth}: any = useSelector(store => store);
-  const [delete, setDelete] = useState(false);
+  const [deleteMessage, setDeleteMessage] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleDeleteMessage = () => {
+    deletedMessage(messages.id)(dispatch);
+  };
 
   return (
     <div
-      className={`flex flex-col ${
+      className={`flex flex-row ${
         auth.user.id !== messages.user.id ? 'justify-start' : 'justify-end'
       } text-white`}
     >
+      {deleteMessage && (
+        <IconButton onClick={handleDeleteMessage} size='large' color='error'>
+          <Delete color='inherit' />
+        </IconButton>
+      )}
       <div
         className={`p-1 ${
           (messages.image[0] || messages.video) !== null
@@ -74,14 +85,16 @@ const ChatMessage = ({messages}: any) => {
               />
             )}
           </div>
-          <p className={`${messages.image[0] !== null ? 'py-2' : 'py-1'}`}>
+          <p
+            onClick={() => setDeleteMessage(!deleteMessage)}
+            className={`${
+              messages.image[0] !== null ? 'py-2' : 'py-1'
+            } cursor-pointer`}
+          >
             {messages.content}
           </p>
         </div>
       </div>
-      <IconButton size='large' color='error'>
-        <Delete color='inherit'/>
-      </IconButton>
     </div>
   );
 };

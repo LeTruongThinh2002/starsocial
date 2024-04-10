@@ -31,9 +31,7 @@ const Message = () => {
   const [currentChat, setCurrentChat] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<any>();
-  // const [scrollDefault, setScrollDefault] = useState<any>(
-  //   chatContainerRef.current.scrollTop
-  // );
+
   const [image, setImage] = useState(['']);
   const [video, setVideo] = useState(['']);
   const [reviewImg, setReviewImg] = useState(['']);
@@ -44,7 +42,6 @@ const Message = () => {
 
   useEffect(() => {
     getAllChat()(dispatch);
-    // dispatch({type: SEARCH_USER_FAILURE});
 
     // Tìm cuộc trò chuyện hiện tại và thiết lập messages tương ứng
     if (currentChat) {
@@ -60,6 +57,15 @@ const Message = () => {
     }
   }, [message.chats, currentChat, dispatch]);
 
+  //connect Stomp
+  useEffect(() => {
+    const sock = new SockJS('http://localhost:8888/ws');
+    const stomp = Stomp.over(sock);
+    setStompClient(stomp);
+    stomp.connect({}, onConnect, onErr);
+  }, []);
+
+  //connect current chat messege
   useEffect(() => {
     if (stompClient && auth.user && currentChat) {
       const subscription = stompClient.subscribe(
@@ -69,13 +75,6 @@ const Message = () => {
     }
   }, [currentChat]);
 
-  useEffect(() => {
-    const sock = new SockJS('http://localhost:8888/ws');
-    const stomp = Stomp.over(sock);
-    setStompClient(stomp);
-    stomp.connect({}, onConnect, onErr);
-  }, []);
-
   const onConnect = () => {
     console.log('onConnect');
   };
@@ -83,6 +82,7 @@ const Message = () => {
     console.log('onError');
   };
 
+  //send new message to server
   const sendMessageToServer = (newMessage: any) => {
     if (stompClient && newMessage) {
       stompClient.send(
@@ -93,12 +93,14 @@ const Message = () => {
     }
   };
 
+  //received new message from server
   const onMessageReceived = (payload: any) => {
     const receivedMessage = JSON.parse(payload.body);
     console.log('message received from websocket', receivedMessage);
     setMessages([...messages, receivedMessage]);
   };
 
+  //set scroll
   useEffect(() => {
     if (shouldScrollToBottom && chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
@@ -106,6 +108,7 @@ const Message = () => {
     }
   }, [messages, shouldScrollToBottom]);
 
+  //check user scroll position
   const handleScroll = () => {
     const {scrollTop, clientHeight, scrollHeight} = chatContainerRef.current;
     // Kiểm tra xem người dùng đã cuộn lên chưa
@@ -115,6 +118,7 @@ const Message = () => {
     setShouldScrollToBottom(!isScrolledUp);
   };
 
+  //upload image/video to filereader review
   const handleUploadImage = async (value: any) => {
     setLoading(true);
     if (value.length > 6) {
@@ -156,10 +160,13 @@ const Message = () => {
     setVideo(value);
     setLoading(false);
   };
+
+  //delete search user on first render component
   useEffect(() => {
     dispatch({type: SEARCH_USER_FAILURE});
   }, []);
 
+  //create message
   const handleCreateMessage = async (value: any) => {
     if (currentChat) {
       setLoading(true);

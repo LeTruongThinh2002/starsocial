@@ -1,12 +1,15 @@
 package com.letruongthinh.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.letruongthinh.models.Chat;
 import com.letruongthinh.models.Message;
 import com.letruongthinh.models.User;
@@ -15,6 +18,8 @@ import com.letruongthinh.repository.MessageRepository;
 
 @Service
 public class MessageServiceImplementation implements MessageService{
+
+    private Cloudinary cloudinary;
 
     @Autowired
     private MessageRepository messageRepository;
@@ -59,7 +64,46 @@ public class MessageServiceImplementation implements MessageService{
         if(message.isPresent()){
             Message msg = message.get();
             if(msg.getUser().equals(user)){
+
+                // Xóa hình ảnh và video từ Cloudinary
+                List<String> images = new ArrayList<>(msg.getImage());
+                String videos = msg.getVideo();
+                List<String> publicIdImages = new ArrayList<>();
+                String publicIdVideos = null;
+                if(!images.isEmpty()){
+                    for (String url : images) {
+                        if (url != null) {
+                        String[] parts = url.split("/");
+                        String fileName = parts[parts.length - 1];
+                        String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
+                        publicIdImages.add(publicId);
+                        }
+                    }
+                }
+                if(!videos.isEmpty()){
+                    if (videos != null) {
+                    String[] parts = videos.split("/");
+                    String fileName = parts[parts.length - 1];
+                    String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
+                    publicIdVideos = publicId;
+                    }
+                }
+
+                cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dd0tbhnzl",
+                    "api_key", "234868554266692",
+                    "api_secret", "fy7mChtdmnKGQ6MVOxldJdSyqAI"
+                ));
+                if(!publicIdImages.isEmpty()){
+                    for (String file : publicIdImages) {
+                        cloudinary.uploader().destroy(file, ObjectUtils.asMap("resource_type", "image"));
+                    }
+                }
+                if(!publicIdVideos.isEmpty()){
+                    cloudinary.uploader().destroy(publicIdVideos, ObjectUtils.asMap("resource_type", "video"));
+                }
                 messageRepository.delete(msg);
+
             } else {
                 throw new Exception("You are not the owner of this message!");
             }

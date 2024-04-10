@@ -68,7 +68,7 @@ export const deleteChat = (chatId: any) => async (dispatch: any) => {
   }
 };
 
-export const deleteMesage = (messageId: any) => async (dispatch: any) => {
+export const deletedMessage = (messageId: any) => async (dispatch: any) => {
   dispatch({type: DELETE_MESSAGE_REQUEST});
   try {
     const {data} = await api.delete(
