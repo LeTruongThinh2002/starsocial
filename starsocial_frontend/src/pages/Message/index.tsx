@@ -294,7 +294,7 @@ const Message = () => {
                       <ChatMessage key={msg.id} messages={msg} />
                     ))}
                 </div>
-                <div className='sticky bg-black border-slate-800 bottom-0 border-t '>
+                <div className='sticky flex flex-col bg-black border-slate-800 bottom-0 border-t '>
                   <div className='py-5  flex items-center justify-center space-x-5'>
                     <input
                       onKeyPress={(e: any) => {
@@ -343,6 +343,29 @@ const Message = () => {
                       </IconButton>
                     </div>
                   </div>
+                  {(reviewImg.length || reviewVideo.length) > 0 && (
+                    <div className='flex items-center justify-center'>
+                      {reviewImg.length > 0 &&
+                        reviewImg.map((item: any, index: number) => (
+                          <img
+                            key={index}
+                            src={item}
+                            className='max-w-[100px] max-h-[100px] object-center'
+                            alt=''
+                          />
+                        ))}
+                      {reviewVideo.length > 0 &&
+                        reviewVideo.map((item: any, index: number) => (
+                          <video
+                            key={index}
+                            src={item}
+                            className='max-w-[100px] max-h-[100px] object-center'
+                            controls
+                            loop
+                          />
+                        ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </>
