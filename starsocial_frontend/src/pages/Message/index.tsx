@@ -31,12 +31,43 @@ const Message = () => {
   const [currentChat, setCurrentChat] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<any>();
+  // const [scrollDefault, setScrollDefault] = useState<any>(
+  //   chatContainerRef.current.scrollTop
+  // );
   const [image, setImage] = useState(['']);
   const [video, setVideo] = useState(['']);
   const [reviewImg, setReviewImg] = useState(['']);
   const [reviewVideo, setReviewVideo] = useState(['']);
   const [stompClient, setStompClient] = useState<any>();
   const chatContainerRef = useRef<any>(null);
+  const [shouldScrollToBottom, setShouldScrollToBottom] = useState(true);
+
+  useEffect(() => {
+    getAllChat()(dispatch);
+    // dispatch({type: SEARCH_USER_FAILURE});
+
+    // Tìm cuộc trò chuyện hiện tại và thiết lập messages tương ứng
+    if (currentChat) {
+      const currentChatMessages = message.chats.find(
+        (item: any) => item.id === currentChat.id
+      )?.messages;
+
+      if (currentChatMessages) {
+        setMessages(currentChatMessages);
+      } else {
+        setCurrentChat(null);
+      }
+    }
+  }, [message.chats, currentChat, dispatch]);
+
+  useEffect(() => {
+    if (stompClient && auth.user && currentChat) {
+      const subscription = stompClient.subscribe(
+        `/user/${currentChat.id}/private`,
+        onMessageReceived
+      );
+    }
+  }, [currentChat]);
 
   useEffect(() => {
     const sock = new SockJS('http://localhost:8888/ws');
@@ -51,15 +82,6 @@ const Message = () => {
   const onErr = () => {
     console.log('onError');
   };
-
-  useEffect(() => {
-    if (stompClient && auth.user && currentChat) {
-      const subscription = stompClient.subscribe(
-        `/user/${currentChat.id}/private`,
-        onMessageReceived
-      );
-    }
-  }, [currentChat]);
 
   const sendMessageToServer = (newMessage: any) => {
     if (stompClient && newMessage) {
@@ -78,11 +100,20 @@ const Message = () => {
   };
 
   useEffect(() => {
-    if (chatContainerRef.current) {
+    if (shouldScrollToBottom && chatContainerRef.current) {
       chatContainerRef.current.scrollTop =
         chatContainerRef.current.scrollHeight;
     }
-  }, [messages]);
+  }, [messages, shouldScrollToBottom]);
+
+  const handleScroll = () => {
+    const {scrollTop, clientHeight, scrollHeight} = chatContainerRef.current;
+    // Kiểm tra xem người dùng đã cuộn lên chưa
+    const isScrolledUp = scrollTop + clientHeight < scrollHeight - 10; // 10 là ngưỡng nhỏ để xác định người dùng đã cuộn lên
+
+    // Cập nhật state shouldScrollToBottom dựa trên việc người dùng cuộn lên hay không
+    setShouldScrollToBottom(!isScrolledUp);
+  };
 
   const handleUploadImage = async (value: any) => {
     setLoading(true);
@@ -128,21 +159,6 @@ const Message = () => {
   useEffect(() => {
     dispatch({type: SEARCH_USER_FAILURE});
   }, []);
-  useEffect(() => {
-    getAllChat()(dispatch);
-    // dispatch({type: SEARCH_USER_FAILURE});
-
-    // Tìm cuộc trò chuyện hiện tại và thiết lập messages tương ứng
-    if (currentChat) {
-      const currentChatMessages = message.chats.find(
-        (item: any) => item.id === currentChat.id
-      )?.messages;
-
-      if (currentChatMessages) {
-        setMessages(currentChatMessages);
-      }
-    }
-  }, [message.chats, currentChat, dispatch]);
 
   const handleCreateMessage = async (value: any) => {
     if (currentChat) {
@@ -158,8 +174,10 @@ const Message = () => {
 
       message.video = (await uploadToCLoudinary(video, 'video'))[0];
 
-      createMessage({message, sendMessageToServer})(dispatch);
+      await createMessage({message, sendMessageToServer})(dispatch);
       setLoading(false);
+      setImage(['']);
+      setVideo(['']);
     }
   };
 
@@ -203,7 +221,14 @@ const Message = () => {
             <>
               <div>
                 <div className='flex justify-between items-center border-b border-slate-800 p-5'>
-                  <div className='flex items-center space-x-3'>
+                  <Link
+                    to={`/profile/${
+                      auth.user.id === currentChat.users[0].id
+                        ? currentChat.users[1].id
+                        : currentChat.users[0].id
+                    }`}
+                    className='flex items-center space-x-3'
+                  >
                     {auth.user.id === currentChat.users[0].id ? (
                       <>
                         <Avatar src={currentChat.users[1].avatar} />
@@ -215,7 +240,8 @@ const Message = () => {
                         <p>{`${currentChat.users[0].firstName} ${currentChat.users[0].lastName}`}</p>
                       </>
                     )}
-                  </div>
+                  </Link>
+
                   <div className='flex space-x-3'>
                     <IconButton color='inherit'>
                       <AddIcCall />
@@ -227,6 +253,7 @@ const Message = () => {
                 </div>
                 <div
                   ref={chatContainerRef}
+                  onScroll={handleScroll}
                   className='no-scrollbar overflow-y-scroll h-[82vh] px-2 space-y-5 lg:py-16 xl:py-10 py-16'
                 >
                   {messages &&

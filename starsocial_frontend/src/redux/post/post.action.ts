@@ -62,7 +62,7 @@ export const createCommentAction =
       );
       dispatch({
         type: CREATE_COMMENT_SUCCESS,
-        payload: data
+        payload: {postId, comment: data}
       });
     } catch (error: any) {
       console.log('error ----', error);

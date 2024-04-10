@@ -8,14 +8,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.letruongthinh.models.Chat;
+import com.letruongthinh.models.Message;
 import com.letruongthinh.models.User;
 import com.letruongthinh.repository.ChatRepository;
+import com.letruongthinh.repository.MessageRepository;
 
 @Service
 public class ChatServiceImplementation implements ChatService {
 
     @Autowired
     private ChatRepository chatRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @Override
     public Chat createChat(User reqUser, User user) {
@@ -57,5 +62,27 @@ public class ChatServiceImplementation implements ChatService {
         
         return chatRepository.findByUsersId(userId);
     }
+
+    @Override
+    public String deleteChat(Integer chatId, User reqUser) {
+            Optional<Chat> chat= chatRepository.findById(chatId);
+
+            if(chat.isPresent()){
+                Chat chats = chat.get();
+                List<User> usersInChat = chats.getUsers();
+                if(usersInChat.contains(reqUser)){
+                    List<Message> messages = chats.getMessages();
+                    messageRepository.deleteAll(messages);
+                    chatRepository.delete(chats);
+                    return "delete chat successfully!";
+                }else{
+                    return "You do not exist in this chat!";
+                }
+            }else{
+                return "chat not found for id " + chatId;
+            }
+    }
+
+    
 
 }

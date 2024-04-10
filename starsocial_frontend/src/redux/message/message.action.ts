@@ -7,6 +7,12 @@ import {
   CREATE_MESSAGE_FAILURE,
   CREATE_MESSAGE_REQUEST,
   CREATE_MESSAGE_SUCCESS,
+  DELETE_CHAT_FAILURE,
+  DELETE_CHAT_REQUEST,
+  DELETE_CHAT_SUCCESS,
+  DELETE_MESSAGE_FAILURE,
+  DELETE_MESSAGE_REQUEST,
+  DELETE_MESSAGE_SUCCESS,
   GET_ALL_CHAT_FAILURE,
   GET_ALL_CHAT_REQUEST,
   GET_ALL_CHAT_SUCCESS
@@ -43,6 +49,40 @@ export const createChat = (userId: any) => async (dispatch: any) => {
     console.log('-------', error);
     showToast(error.response.data.message, 'error');
     dispatch({type: CREATE_CHAT_FAILURE, payload: error});
+  }
+};
+
+export const deleteChat = (chatId: any) => async (dispatch: any) => {
+  dispatch({type: DELETE_CHAT_REQUEST});
+  try {
+    const {data} = await api.delete(`${API_URL_BASE}/api/chats/${chatId}`);
+    dispatch({
+      type: DELETE_CHAT_SUCCESS,
+      payload: chatId
+    });
+    showToast(data, 'success');
+  } catch (error: any) {
+    console.log('-------', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: DELETE_CHAT_FAILURE, payload: error});
+  }
+};
+
+export const deleteMesage = (messageId: any) => async (dispatch: any) => {
+  dispatch({type: DELETE_MESSAGE_REQUEST});
+  try {
+    const {data} = await api.delete(
+      `${API_URL_BASE}/api/messages/${messageId}`
+    );
+    dispatch({
+      type: DELETE_MESSAGE_SUCCESS,
+      payload: messageId
+    });
+    showToast(data, 'success');
+  } catch (error: any) {
+    console.log('-------', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: DELETE_MESSAGE_FAILURE, payload: error});
   }
 };
 

@@ -95,9 +95,9 @@ public class PostServiceImplementation implements PostService{
     }
 
     cloudinary = new Cloudinary(ObjectUtils.asMap(
-        "cloud_name", "dt5mw56za",
-        "api_key", "293213964299916",
-        "api_secret", "8gf645NF59FPQ80AtqZJD7iqnf0"
+        "cloud_name", "dd0tbhnzl",
+        "api_key", "234868554266692",
+        "api_secret", "fy7mChtdmnKGQ6MVOxldJdSyqAI"
     ));
     if(!publicIdImages.isEmpty()){
         for (String file : publicIdImages) {

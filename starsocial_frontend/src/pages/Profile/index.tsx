@@ -70,7 +70,7 @@ const Profile = () => {
     return () => {
       isUnmounted.current = true;
     };
-  }, [id, auth.userById, dispatch]);
+  }, [id, auth.userById, dispatch, auth.user]);
 
   useEffect(() => {
     if (isUnmounted.current) {

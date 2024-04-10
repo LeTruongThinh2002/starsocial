@@ -32,7 +32,7 @@ const Register = () => {
   const [gender, setGender] = useState('male');
   const dispatch = useDispatch();
 
-  const handleSubmit = (value: RegisterType) => {
+  const handleSubmit = async (value: RegisterType) => {
     value.gender = gender;
     if (gender == 'male') {
       value.avatar =
@@ -42,7 +42,7 @@ const Register = () => {
         'https://cdn.pixabay.com/animation/2023/12/01/11/58/11-58-39-702_512.gif';
     }
     console.log('hanlde submit', value);
-    registerUserAction(value)(dispatch);
+    await registerUserAction(value)(dispatch);
   };
   const handleChangeGenfer = (event: ChangeEvent<HTMLInputElement>) => {
     setGender(event.target.value);

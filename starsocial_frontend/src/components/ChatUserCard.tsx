@@ -1,6 +1,7 @@
-import {MoreHorizRounded} from '@mui/icons-material';
+import {DeleteRounded} from '@mui/icons-material';
 import {Avatar, Card, CardHeader, IconButton} from '@mui/material';
 import {useSelector} from 'react-redux';
+import ChatDeleteModal from './ChatDeleteModal';
 
 const ChatUserCard = ({chat}: any) => {
   const {message, auth}: any = useSelector(store => store);
@@ -17,10 +18,15 @@ const ChatUserCard = ({chat}: any) => {
       <CardHeader
         avatar={<Avatar src={user.avatar} />}
         action={
-          <IconButton color='inherit'>
-            <MoreHorizRounded />
+          <IconButton color='error'>
+            <ChatDeleteModal
+              children={<DeleteRounded color='inherit' />}
+              chatId={chat.id}
+              userName={user.firstName + ' ' + user.lastName}
+            />
           </IconButton>
         }
+        className='cursor-pointer'
         title={user.firstName + ' ' + user.lastName}
         subheader={new Date(chat.timestamp).toLocaleString()}
         subheaderTypographyProps={{color: 'rgba(255, 255, 255, 0.5)'}}

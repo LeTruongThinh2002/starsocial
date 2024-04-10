@@ -9,12 +9,14 @@ import {
 } from 'react-router-dom';
 import Authentiocation from './layout/Authentication';
 import Layout from './layout/HomePage';
+import ForgotPassword from './pages/ForgotPassword';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Message from './pages/Message';
 import Profile from './pages/Profile';
 import Reels from './pages/Reels';
 import Register from './pages/Register';
+import ResetPassword from './pages/ResetPassword';
 import {getProfileAction} from './redux/auth/auth.action';
 
 const App = () => {
@@ -66,6 +68,22 @@ const App = () => {
               element={
                 <Authentiocation>
                   <Login />
+                </Authentiocation>
+              }
+            />
+            <Route
+              path='/forgotPassword'
+              element={
+                <Authentiocation>
+                  <ForgotPassword />
+                </Authentiocation>
+              }
+            />
+            <Route
+              path='/resetPassword/:token'
+              element={
+                <Authentiocation>
+                  <ResetPassword />
                 </Authentiocation>
               }
             />

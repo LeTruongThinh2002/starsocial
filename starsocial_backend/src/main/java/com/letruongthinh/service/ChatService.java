@@ -13,4 +13,5 @@ public interface ChatService {
 
     public List<Chat> findChatByUsersId(Integer userId);
 
+    public String deleteChat(Integer chatId, User reqUser);
 }

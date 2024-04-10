@@ -2,23 +2,36 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import {ErrorMessage, Field, Form, Formik} from 'formik';
 import {useDispatch} from 'react-redux';
-import {Link} from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import * as Yup from 'yup';
-import {LoginType, loginUserAction} from '../../redux/auth/auth.action';
-const initialValues = {email: '', password: ''};
+import {resetPasswordAction} from '../../redux/auth/auth.action';
+
+export type ResetPwd = {
+  token: string;
+  password: string;
+  confirmPassword: string;
+};
+const initialValues = {token: '', password: '', confirmPassword: ''};
 const validationSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
-    .required('Password is required')
+    .required('Password is required'),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password')], 'Passwords must match')
+    .required('Please confirm your password')
 });
 
-const Login = () => {
+const ResetPassword = () => {
   const dispatch = useDispatch();
+  const {token} = useParams();
+  const navigate = useNavigate();
 
-  const handleSubmit = (value: LoginType) => {
-    console.log('hanlde submit', value);
-    loginUserAction(value)(dispatch);
+  const handleSubmit = async (value: ResetPwd) => {
+    if (token !== undefined) {
+      value.token = token;
+    }
+    await resetPasswordAction(value)(dispatch);
+    navigate('/login');
   };
   return (
     <>
@@ -29,21 +42,6 @@ const Login = () => {
       >
         <Form className='space-y-5'>
           <div className='space-y-5'>
-            <div>
-              <Field
-                as={TextField}
-                name='email'
-                label='Email'
-                type='email'
-                variant='standard'
-                fullWidth
-              />
-              <ErrorMessage
-                name='email'
-                component={'div'}
-                className='text-red-500'
-              />
-            </div>
             <div>
               <Field
                 as={TextField}
@@ -60,6 +58,21 @@ const Login = () => {
               />
             </div>
           </div>
+          <div>
+            <Field
+              as={TextField}
+              name='confirmPassword'
+              label='Confirm password'
+              type='password'
+              variant='standard'
+              fullWidth
+            />
+            <ErrorMessage
+              name='confirmPassword'
+              component={'div'}
+              className='text-red-500'
+            />
+          </div>
           <Button
             sx={{padding: '.8rem 0rem'}}
             fullWidth
@@ -67,19 +80,13 @@ const Login = () => {
             variant='contained'
             color='primary'
           >
-            Login
+            Change password
           </Button>
           <div>
             <span className=' lg:text-lg text-xl'>
-              If you don't have account,{' '}
-              <Link className='text-sky-700 underline' to={'/register'}>
-                register here!
-              </Link>
-            </span>
-            <br></br>
-            <span className=' lg:text-lg text-xl'>
-              <Link className='text-sky-700 underline' to={'/forgotPassword'}>
-                Forgot password?
+              If you have account,{' '}
+              <Link className='text-sky-700 underline' to={'/login'}>
+                login here!
               </Link>
             </span>
           </div>
@@ -89,4 +96,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default ResetPassword;

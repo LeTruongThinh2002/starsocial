@@ -129,13 +129,11 @@ const CreatePostForm = ({user, children}: any) => {
                 <div className='space-y-5'>
                   <CardHeader
                     avatar={
-                      <Avatar sx={{bgcolor: 'transparent'}} aria-label='recipe'>
-                        <img
-                          src={user.avatar}
-                          className='object-cover object-center'
-                          alt=''
-                        />
-                      </Avatar>
+                      <Avatar
+                        src={user.avatar}
+                        sx={{bgcolor: 'transparent'}}
+                        aria-label='recipe'
+                      />
                     }
                     title={user.firstName + ' ' + user.lastName}
                     subheader={new Date().toDateString()}

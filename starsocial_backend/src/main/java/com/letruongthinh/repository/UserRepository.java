@@ -10,6 +10,9 @@ import com.letruongthinh.models.Post;
 import com.letruongthinh.models.User;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
+
+	List<User> findAllByOrderByFollowersDesc();
+
 	public User findByEmail(String email);
 
 	List<User> findBySavedPostContains(Post post);

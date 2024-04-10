@@ -1,23 +1,33 @@
 import axios from 'axios';
 
 import {API_URL_BASE, api} from '../../config/api';
+import {ResetPwd} from '../../pages/ResetPassword';
 import {showToast} from '../../ultis/showToast';
 import {
   FOLLOW_USER_FAILURE,
   FOLLOW_USER_REQUEST,
   FOLLOW_USER_SUCCESS,
+  FORGOT_PASSWORD_FAILURE,
+  FORGOT_PASSWORD_REQUEST,
+  FORGOT_PASSWORD_SUCCESS,
   GET_PROFILE_BY_ID_FAILURE,
   GET_PROFILE_BY_ID_REQUEST,
   GET_PROFILE_BY_ID_SUCCESS,
   GET_PROFILE_FAILURE,
   GET_PROFILE_REQUEST,
   GET_PROFILE_SUCCESS,
+  GET_USERS_SUGGEST_FAILURE,
+  GET_USERS_SUGGEST_REQUEST,
+  GET_USERS_SUGGEST_SUCCESS,
   LOGIN_FAILURE,
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
   REGISTER_FAILURE,
   REGISTER_REQUEST,
   REGISTER_SUCCESS,
+  RESET_PASSWORD_FAILURE,
+  RESET_PASSWORD_REQUEST,
+  RESET_PASSWORD_SUCCESS,
   SAVEDPOST_FAILURE,
   SAVEDPOST_REQUEST,
   SAVEDPOST_SUCCESS,
@@ -59,6 +69,40 @@ export const loginUserAction =
       console.log('-------', error);
       showToast(error.response.data.message, 'error');
       dispatch({type: LOGIN_FAILURE, payload: error});
+    }
+  };
+
+export const forgotPasswordAction =
+  (email: string) => async (dispatch: any) => {
+    dispatch({type: FORGOT_PASSWORD_REQUEST});
+    try {
+      const {data} = await axios.post(`${API_URL_BASE}/forgotPassword`, email);
+      dispatch({
+        type: FORGOT_PASSWORD_SUCCESS,
+        payload: data
+      });
+      showToast(data, 'success');
+    } catch (error: any) {
+      console.log('-------', error);
+      showToast(error.response.data.message, 'error');
+      dispatch({type: FORGOT_PASSWORD_FAILURE, payload: error});
+    }
+  };
+
+export const resetPasswordAction =
+  (reqData: ResetPwd) => async (dispatch: any) => {
+    dispatch({type: RESET_PASSWORD_REQUEST});
+    try {
+      const {data} = await axios.post(`${API_URL_BASE}/resetPassword`, reqData);
+      dispatch({
+        type: RESET_PASSWORD_SUCCESS,
+        payload: data
+      });
+      showToast(data, 'success');
+    } catch (error: any) {
+      console.log('-------', error);
+      showToast(error.response.data.message, 'error');
+      dispatch({type: RESET_PASSWORD_FAILURE, payload: error});
     }
   };
 
@@ -144,6 +188,21 @@ export const searchUserAction = (query: string) => async (dispatch: any) => {
     console.log('-------', error);
     showToast(error.response.data.message, 'error');
     dispatch({type: SEARCH_USER_FAILURE, payload: error});
+  }
+};
+
+export const getUserSuggestAction = () => async (dispatch: any) => {
+  dispatch({type: GET_USERS_SUGGEST_REQUEST});
+  try {
+    const {data} = await api.get(`${API_URL_BASE}/api/users/suggest`);
+    dispatch({
+      type: GET_USERS_SUGGEST_SUCCESS,
+      payload: data
+    });
+  } catch (error: any) {
+    console.log('-------', error);
+    showToast(error.response.data.message, 'error');
+    dispatch({type: GET_USERS_SUGGEST_FAILURE, payload: error});
   }
 };
 

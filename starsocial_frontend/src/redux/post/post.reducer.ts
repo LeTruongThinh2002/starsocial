@@ -117,7 +117,11 @@ export const postReducer = (state = initialState, action: ActionType) => {
     case CREATE_COMMENT_SUCCESS:
       return {
         ...state,
-        newComments: action.payload,
+        posts: state.posts.map((post: any) =>
+          post.id === action.payload.postId
+            ? {...post, comments: [...post.comments, action.payload.comment]}
+            : post
+        ),
         loading: false,
         error: null
       };

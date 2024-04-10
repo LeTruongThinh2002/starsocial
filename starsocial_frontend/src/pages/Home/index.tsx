@@ -19,7 +19,7 @@ const Home = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     getAllPostAction()(dispatch);
-  }, [post.newComments, post.post]);
+  }, [post.post]);
   useEffect(() => {
     dispatch({type: SEARCH_USER_FAILURE});
   }, []);

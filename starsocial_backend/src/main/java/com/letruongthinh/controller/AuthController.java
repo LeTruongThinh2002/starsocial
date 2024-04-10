@@ -15,6 +15,7 @@ import com.letruongthinh.config.JwtProvider;
 import com.letruongthinh.models.User;
 import com.letruongthinh.repository.UserRepository;
 import com.letruongthinh.request.LoginRequest;
+import com.letruongthinh.request.SignUpRequest;
 import com.letruongthinh.response.AuthResponse;
 import com.letruongthinh.service.CustomerUserDetailsService;
 import com.letruongthinh.service.UserService;
@@ -37,7 +38,7 @@ public class AuthController {
 
     // /auth/signup
     @PostMapping("/signup")
-	public AuthResponse createUser(@RequestBody User user) throws Exception {
+	public AuthResponse createUser(@RequestBody SignUpRequest user) throws Exception {
 
         User isExist = userRepository.findByEmail(user.getEmail());
 
@@ -74,7 +75,9 @@ public class AuthController {
 
         AuthResponse response =new AuthResponse(token,"Login successfully");
 		return response;
-}
+    }
+
+   
 
     private Authentication authenticate(String email, String password) {
         UserDetails userDetails = customerUserDetails.loadUserByUsername(email);
@@ -83,7 +86,7 @@ public class AuthController {
             throw new BadCredentialsException("invalid username");
         }
         if(!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new BadCredentialsException("password does not match");
+            throw new BadCredentialsException("password does not match!");
         }
         return new UsernamePasswordAuthenticationToken(userDetails, null,userDetails.getAuthorities());
     }

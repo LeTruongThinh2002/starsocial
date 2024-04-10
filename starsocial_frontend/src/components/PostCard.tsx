@@ -24,7 +24,6 @@ import {
 import {getTimeAgo} from '../ultis/getTimeAgo';
 import MenuPost from './MenuPost';
 import PostMedia from './PostMedia';
-import PostModal from './PostModal';
 
 const PostCard = ({user, post}: any) => {
   const dispatch = useDispatch();
@@ -166,9 +165,13 @@ const PostCard = ({user, post}: any) => {
           </>
         )}
       </CardContent>
-      <div className='h-[80vh]'>
-        <PostMedia image={post.image} video={post.video} />
-      </div>
+      {post.image[0] !== null || post.video[0] !== null ? (
+        <div className='h-[80vh]'>
+          <PostMedia image={post.image} video={post.video} />
+        </div>
+      ) : (
+        ''
+      )}
       <CardActions disableSpacing className='flex flex-col w-full'>
         <div className='flex flex-row w-full'>
           <IconButton
@@ -262,17 +265,6 @@ const PostCard = ({user, post}: any) => {
                   </div>
                 </div>
               ))}
-            {post.comments.length > 5 && (
-              <PostModal
-                children={
-                  <div className='flex justify-center hover:text-sky-600'>
-                    See more...
-                  </div>
-                }
-                post={post}
-                user={user}
-              />
-            )}
           </div>
         </section>
       )}

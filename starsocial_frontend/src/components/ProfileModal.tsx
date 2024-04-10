@@ -1,6 +1,7 @@
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
 import {Button as Buttonjoy} from '@mui/joy';
+import {Backdrop, CircularProgress} from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,11 +14,11 @@ import {ChangeEvent, useState} from 'react';
 import {useDispatch} from 'react-redux';
 import * as Yup from 'yup';
 import {updateProfileAction} from '../redux/auth/auth.action';
+import {uploadToCLoudinary} from '../ultis/uploadToCloudinary';
 
 const validationSchema = Yup.object().shape({
   firstName: Yup.string().trim().required('First name is required'),
-  lastName: Yup.string().trim().required('Last name is required'),
-  email: Yup.string().email('Invalid email').required('Email is required')
+  lastName: Yup.string().trim().required('Last name is required')
 });
 
 const sx = {
@@ -34,7 +35,6 @@ const ProfileModal = ({user}: any) => {
   let initialValues = {
     firstName: user.firstName,
     lastName: user.lastName,
-    email: user.email,
     gender: user.gender,
     avatar: user.avatar
   };
@@ -42,17 +42,34 @@ const ProfileModal = ({user}: any) => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [gender, setGender] = useState(user.gender);
+  const [reviewAvatar, setReviewAvatar] = useState(user.avatar);
+  const [avatar, setAvatar] = useState(['']);
+  const [loading, setLoading] = useState(false);
+
   const dispatch = useDispatch();
-  const handleSubmit = (values: any) => {
-    values.gender = gender;
-    if (gender == 'male') {
-      values.avatar =
-        'https://cdn.pixabay.com/animation/2022/12/05/15/23/15-23-06-837_512.gif';
-    } else {
-      values.avatar =
-        'https://cdn.pixabay.com/animation/2023/12/01/11/58/11-58-39-702_512.gif';
+
+  const handleAvatarChange = (file: any) => {
+    let urls: string;
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        urls = reader.result as string;
+        setReviewAvatar(urls);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Error reading file:', error);
     }
-    updateProfileAction(values)(dispatch);
+    setAvatar(file);
+  };
+
+  const handleSubmit = async (values: any) => {
+    setLoading(true);
+    values.gender = gender;
+    values.avatar = (await uploadToCLoudinary([avatar], 'image'))[0];
+    setReviewAvatar(values.avatar);
+    await updateProfileAction(values)(dispatch);
+    setLoading(false);
     handleClose();
   };
   const handleChangeGenfer = (event: ChangeEvent<HTMLInputElement>) => {
@@ -63,125 +80,139 @@ const ProfileModal = ({user}: any) => {
       <Button onClick={handleOpen} variant='outlined'>
         Edit Profile
       </Button>
-      <Modal
-        open={open}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <div className='modal p-4 lg:w-fit md:w-fit w-full'>
-          <Formik
-            onSubmit={handleSubmit}
-            validationSchema={validationSchema}
-            initialValues={initialValues}
-          >
-            <Form>
-              <div className='lg:h-[20rem] md:h-[20rem] h-[15rem]'>
-                <img
-                  src={user.background}
-                  className='w-full h-full rounded-t-md object-cover object-center'
-                  alt=''
-                />
-              </div>
-              <div className='px-5 flex justify-between items-start mt-5 h-[5rem]'>
-                <Avatar
-                  className='transform -translate-y-24'
-                  sx={{width: '10rem', height: '10rem'}}
-                  src={user.avatar}
-                />
-              </div>
-              <div className='flex flex-col gap-5'>
-                <div>
-                  <Field
-                    as={TextField}
-                    name='firstName'
-                    label='First name'
-                    type='text'
-                    variant='standard'
-                    fullWidth
-                    sx={sx}
-                  />
-                  <ErrorMessage
-                    name='firstName'
-                    component={'div'}
-                    className='text-red-500'
+      {!loading ? (
+        <Modal
+          open={open}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <div className='modal p-4 lg:w-fit md:w-fit w-full'>
+            <Formik
+              onSubmit={handleSubmit}
+              validationSchema={validationSchema}
+              initialValues={initialValues}
+            >
+              <Form>
+                <div className='lg:h-[20rem] md:h-[20rem] h-[15rem]'>
+                  <img
+                    src={user.background}
+                    className='w-full h-full rounded-t-md object-cover object-center'
+                    alt=''
                   />
                 </div>
-                <div>
-                  <Field
-                    as={TextField}
-                    name='lastName'
-                    label='Last name'
-                    type='text'
-                    variant='standard'
-                    fullWidth
-                    sx={sx}
+                <div className='px-5 flex justify-between items-start mt-5 h-[5rem]'>
+                  <input
+                    id='avatar'
+                    name='avatar'
+                    type='file'
+                    accept='image/*'
+                    className='hidden'
+                    onChange={(e: any) => {
+                      handleAvatarChange(e.target.files[0]);
+                    }} // Add onChange handler
                   />
-                  <ErrorMessage
-                    name='lastName'
-                    component={'div'}
-                    className='text-red-500'
-                  />
+                  <label
+                    htmlFor='avatar'
+                    className='cursor-pointer transform -translate-y-24 group relative'
+                    style={{transition: 'opacity 0.3s ease-in-out'}}
+                  >
+                    <Avatar
+                      sx={{width: '10rem', height: '10rem'}}
+                      src={reviewAvatar}
+                      alt='Current Avatar'
+                      className='block group-hover:opacity-50'
+                    />
+                    <div className="absolute top-0 left-0 w-full h-full font-bold text-xl text-transparent bg-clip-text bg-cover bg-center bg-[url('/logo_text_background.webp')] flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      Change avatar
+                    </div>
+                  </label>
                 </div>
-                <div>
-                  <Field
-                    as={TextField}
-                    name='email'
-                    label='Email'
-                    type='email'
-                    variant='standard'
-                    fullWidth
-                    sx={sx}
-                  />
-                  <ErrorMessage
-                    name='email'
-                    component={'div'}
-                    className='text-red-500'
-                  />
-                </div>
-              </div>
 
-              <div>
-                <RadioGroup
-                  onChange={event => handleChangeGenfer(event)}
-                  row
-                  name='gender'
-                  defaultValue={gender}
-                >
-                  <FormControlLabel
-                    value='female'
-                    control={<Radio />}
-                    label='Female'
-                  />
-                  <FormControlLabel
-                    value='male'
-                    control={<Radio />}
-                    label='Male'
-                  />
-                </RadioGroup>
-              </div>
-              <div className='flex flex-row gap-3 p-2 justify-end'>
-                <Buttonjoy
-                  variant='outlined'
-                  type='submit'
-                  color='primary'
-                  size='lg'
-                  //onClick={handleClose}
-                >
-                  <CloudDoneRoundedIcon />
-                </Buttonjoy>
-                <Buttonjoy
-                  variant='outlined'
-                  onClick={handleClose}
-                  color='danger'
-                  size='lg'
-                >
-                  <CloseRoundedIcon />
-                </Buttonjoy>
-              </div>
-            </Form>
-          </Formik>
-        </div>
-      </Modal>
+                <div className='flex flex-col gap-5'>
+                  <div>
+                    <Field
+                      as={TextField}
+                      name='firstName'
+                      label='First name'
+                      type='text'
+                      variant='standard'
+                      fullWidth
+                      sx={sx}
+                    />
+                    <ErrorMessage
+                      name='firstName'
+                      component={'div'}
+                      className='text-red-500'
+                    />
+                  </div>
+                  <div>
+                    <Field
+                      as={TextField}
+                      name='lastName'
+                      label='Last name'
+                      type='text'
+                      variant='standard'
+                      fullWidth
+                      sx={sx}
+                    />
+                    <ErrorMessage
+                      name='lastName'
+                      component={'div'}
+                      className='text-red-500'
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <RadioGroup
+                    onChange={event => handleChangeGenfer(event)}
+                    row
+                    name='gender'
+                    defaultValue={gender}
+                  >
+                    <FormControlLabel
+                      value='female'
+                      control={<Radio />}
+                      label='Female'
+                    />
+                    <FormControlLabel
+                      value='male'
+                      control={<Radio />}
+                      label='Male'
+                    />
+                  </RadioGroup>
+                </div>
+                <div className='flex flex-row gap-3 p-2 justify-end'>
+                  <Buttonjoy
+                    variant='outlined'
+                    type='submit'
+                    color='primary'
+                    size='lg'
+                    //onClick={handleClose}
+                  >
+                    <CloudDoneRoundedIcon />
+                  </Buttonjoy>
+                  <Buttonjoy
+                    variant='outlined'
+                    onClick={handleClose}
+                    color='danger'
+                    size='lg'
+                  >
+                    <CloseRoundedIcon />
+                  </Buttonjoy>
+                </div>
+              </Form>
+            </Formik>
+          </div>
+        </Modal>
+      ) : (
+        <Backdrop
+          sx={{color: '#fff', zIndex: theme => theme.zIndex.drawer + 1}}
+          open={loading}
+        >
+          <CircularProgress color='inherit' />
+        </Backdrop>
+      )}
     </div>
   );
 };

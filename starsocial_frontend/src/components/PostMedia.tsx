@@ -27,7 +27,7 @@ const PostMedia = ({image, video}: any) => {
               <div className='flex items-center'>
                 <CardMedia
                   component='img'
-                  className='object-center'
+                  className='object-center max-h-[80vh]'
                   width={'100%'}
                   image={img}
                   alt=''
@@ -44,9 +44,8 @@ const PostMedia = ({image, video}: any) => {
                   src={vdo}
                   controls
                   controlsList='nodownload'
-                  className='object-center'
+                  className='object-center max-h-[80vh] cursor-pointer'
                   // autoPlay
-                  width={'100%'}
                   loop
                   muted
                 />
