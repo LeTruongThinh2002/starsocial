@@ -54,11 +54,9 @@ const Message = () => {
 
       if (currentChatMessages) {
         setMessages(currentChatMessages);
-      } else {
-        setCurrentChat(null);
       }
     }
-  }, [message.chats, currentChat, dispatch]);
+  }, [message.chats, currentChat]);
 
   //connect Stomp
   useEffect(() => {
@@ -221,17 +219,20 @@ const Message = () => {
                   <SearchChatUser />
                 </div>
                 <div className='h-full space-y-4 mt-5 overflow-y-scroll no-scrollbar'>
-                  {message.chats.map((item: any) => (
-                    <div
-                      key={item.id}
-                      onClick={() => {
-                        setCurrentChat(item);
-                        setMessages(item.messages);
-                      }}
-                    >
-                      <ChatUserCard chat={item} />
-                    </div>
-                  ))}
+                  {message.chats.map(
+                    (item: any) =>
+                      item && (
+                        <div
+                          key={item.id}
+                          onClick={() => {
+                            setCurrentChat(item);
+                            setMessages(item.messages);
+                          }}
+                        >
+                          <ChatUserCard chat={item} />
+                        </div>
+                      )
+                  )}
                 </div>
               </div>
             </div>
@@ -272,19 +273,19 @@ const Message = () => {
                       onChange={(e: any) => handleEditChatImage(e.target.files)}
                       className='hidden'
                     />
-                    <label className='bg-sky-500' htmlFor='chat_image'>
-                      <IconButton color='inherit'>
+                    <IconButton color='inherit'>
+                      <label className='bg-sky-500' htmlFor='chat_image'>
                         <MmsRounded />
-                      </IconButton>
-                    </label>
+                      </label>
+                    </IconButton>
                   </div>
                 </div>
                 <div
                   ref={chatContainerRef}
                   onScroll={handleScroll}
                   className={`no-scrollbar ${
-                    currentChat.chat_image
-                      ? `bg-[url('${currentChat.chat_image}')]`
+                    currentChat.chat_image !== null
+                      ? `bg-[url('${currentChat.chat_image}')] bg-cover bg-center`
                       : `bg-black`
                   } overflow-y-scroll h-[82vh] px-2 space-y-5 lg:py-16 xl:py-10 py-16`}
                 >
@@ -354,16 +355,14 @@ const Message = () => {
                             alt=''
                           />
                         ))}
-                      {reviewVideo.length > 0 &&
-                        reviewVideo.map((item: any, index: number) => (
-                          <video
-                            key={index}
-                            src={item}
-                            className='max-w-[100px] max-h-[100px] object-center'
-                            controls
-                            loop
-                          />
-                        ))}
+                      {reviewVideo[0] !== '' && (
+                        <video
+                          src={reviewVideo[0]}
+                          className='max-w-[100px] max-h-[100px] object-center'
+                          controls
+                          loop
+                        />
+                      )}
                     </div>
                   )}
                 </div>

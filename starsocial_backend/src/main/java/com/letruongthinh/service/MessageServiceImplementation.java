@@ -70,6 +70,11 @@ public class MessageServiceImplementation implements MessageService{
                 String videos = msg.getVideo();
                 List<String> publicIdImages = new ArrayList<>();
                 String publicIdVideos = null;
+                cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", "dd0tbhnzl",
+                    "api_key", "234868554266692",
+                    "api_secret", "fy7mChtdmnKGQ6MVOxldJdSyqAI"
+                ));
                 if(!images.isEmpty()){
                     for (String url : images) {
                         if (url != null) {
@@ -79,29 +84,18 @@ public class MessageServiceImplementation implements MessageService{
                         publicIdImages.add(publicId);
                         }
                     }
-                }
-                if(!videos.isEmpty()){
-                    if (videos != null) {
-                    String[] parts = videos.split("/");
-                    String fileName = parts[parts.length - 1];
-                    String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
-                    publicIdVideos = publicId;
-                    }
-                }
-
-                cloudinary = new Cloudinary(ObjectUtils.asMap(
-                    "cloud_name", "dd0tbhnzl",
-                    "api_key", "234868554266692",
-                    "api_secret", "fy7mChtdmnKGQ6MVOxldJdSyqAI"
-                ));
-                if(!publicIdImages.isEmpty()){
                     for (String file : publicIdImages) {
                         cloudinary.uploader().destroy(file, ObjectUtils.asMap("resource_type", "image"));
                     }
                 }
-                if(!publicIdVideos.isEmpty()){
+                if(videos != null && !videos.isEmpty()){
+                    String[] parts = videos.split("/");
+                    String fileName = parts[parts.length - 1];
+                    String publicId = fileName.split("\\.")[0]; // Lấy phần trước dấu chấm là public ID
+                    publicIdVideos = publicId;
                     cloudinary.uploader().destroy(publicIdVideos, ObjectUtils.asMap("resource_type", "video"));
                 }
+
                 messageRepository.delete(msg);
 
             } else {

@@ -98,7 +98,7 @@ public class ChatServiceImplementation implements ChatService {
             List<User> users = chat.getUsers();
             if(users.contains(reqUser)){
 
-                if(chat.getChat_image().isEmpty()){
+                if(chat.getChat_image()==null){
                     chat.setChat_image(reqChat.getChat_image());
                     chatRepository.save(chat);
                     return chat;

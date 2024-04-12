@@ -74,7 +74,12 @@ const messageReducer = (state = initialState, action: ActionType) => {
       return {
         ...state,
         chats: state.chats.map((chat: any) => {
-          chat.messages.filter((message: any) => message.id !== action.payload);
+          [
+            ...chat,
+            chat.messages.filter(
+              (message: any) => message.id !== action.payload
+            )
+          ];
         }),
         message: null,
         loading: false,

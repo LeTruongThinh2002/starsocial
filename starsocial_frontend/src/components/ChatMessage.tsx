@@ -10,8 +10,8 @@ const ChatMessage = ({messages}: any) => {
   const [deleteMessage, setDeleteMessage] = useState(false);
   const dispatch = useDispatch();
 
-  const handleDeleteMessage = () => {
-    deletedMessage(messages.id)(dispatch);
+  const handleDeleteMessage = async () => {
+    await deletedMessage(messages.id)(dispatch);
   };
 
   return (
