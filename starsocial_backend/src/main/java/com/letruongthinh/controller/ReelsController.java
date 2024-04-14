@@ -3,6 +3,7 @@ package com.letruongthinh.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,5 +47,27 @@ public class ReelsController {
         List<Reels> reels=reelsService.findUsersReel(userId);
 
         return reels;
+    }
+
+    @DeleteMapping("/api/reels/{reelId}")
+    public String deleteReel(
+    @RequestHeader("Authorization") String jwt,
+    @PathVariable Integer reelId
+    ) throws Exception{
+        User user=userService.findUserByJwt(jwt);
+        String msg = reelsService.deleteReel(reelId, user);
+
+        return msg;
+    }
+
+    @PostMapping("/api/reels/{reelId}/like")
+    public Reels likeReel(
+    @RequestHeader("Authorization") String jwt,
+    @PathVariable Integer reelId
+    ) throws Exception{
+        User user=userService.findUserByJwt(jwt);
+        Reels newReel=reelsService.likeReel(reelId, user.getId());
+
+        return newReel;
     }
 }

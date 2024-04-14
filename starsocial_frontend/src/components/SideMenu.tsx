@@ -3,7 +3,6 @@ import Diversity2RoundedIcon from '@mui/icons-material/Diversity2Rounded';
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 
 import MovieFilterRoundedIcon from '@mui/icons-material/MovieFilterRounded';
-import NotificationsActiveRoundedIcon from '@mui/icons-material/NotificationsActiveRounded';
 import ReviewsRoundedIcon from '@mui/icons-material/ReviewsRounded';
 
 export const SideMenu = [
@@ -11,7 +10,7 @@ export const SideMenu = [
     title: 'Home',
     icon: <HomeRoundedIcon fontSize='large' />,
     path: '/'
-  },
+  }, 
   {
     title: 'Reels',
     icon: <MovieFilterRoundedIcon fontSize='large' />,
@@ -20,11 +19,6 @@ export const SideMenu = [
   {
     title: 'Create Reels',
     icon: <DataSaverOnRoundedIcon fontSize='large' />,
-    path: '/'
-  },
-  {
-    title: 'Notifications',
-    icon: <NotificationsActiveRoundedIcon fontSize='large' />,
     path: '/'
   },
   {

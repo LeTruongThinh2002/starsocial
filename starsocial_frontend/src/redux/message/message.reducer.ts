@@ -1,4 +1,4 @@
-import {ActionType} from '../auth/auth.reducer';
+import { ActionType } from "../auth/auth.reducer";
 import {
   CREATE_CHAT_FAILURE,
   CREATE_CHAT_REQUEST,
@@ -17,15 +17,15 @@ import {
   EDIT_CHAT_IMAGE_SUCCESS,
   GET_ALL_CHAT_FAILURE,
   GET_ALL_CHAT_REQUEST,
-  GET_ALL_CHAT_SUCCESS
-} from './message.actionType';
+  GET_ALL_CHAT_SUCCESS,
+} from "./message.actionType";
 
 const initialState = {
   messages: [],
   chats: [],
   loading: false,
   error: null,
-  message: null
+  message: null,
 };
 
 const messageReducer = (state = initialState, action: ActionType) => {
@@ -39,51 +39,50 @@ const messageReducer = (state = initialState, action: ActionType) => {
       return {
         ...state,
         loading: false,
-        error: null
+        error: null,
       };
     case CREATE_MESSAGE_SUCCESS:
       return {
         ...state,
         message: action.payload,
         loading: false,
-        error: null
+        error: null,
       };
     case CREATE_CHAT_SUCCESS:
       return {
         ...state,
         chats: [action.payload, ...state.chats],
         loading: false,
-        error: null
+        error: null,
       };
     case GET_ALL_CHAT_SUCCESS:
       return {
         ...state,
         chats: action.payload,
         loading: false,
-        error: null
+        error: null,
       };
     case DELETE_CHAT_SUCCESS:
       return {
         ...state,
         chats: state.chats.filter((chat: any) => chat.id !== action.payload),
-        message: null,
         loading: false,
-        error: null
+        error: null,
       };
     case DELETE_MESSAGE_SUCCESS:
       return {
         ...state,
         chats: state.chats.map((chat: any) => {
-          [
+          if (!chat.messages) return chat; // Ensure messages exist
+          return {
             ...chat,
-            chat.messages.filter(
+            messages: chat.messages.filter(
               (message: any) => message.id !== action.payload
-            )
-          ];
+            ),
+          };
         }),
-        message: null,
         loading: false,
-        error: null
+        error: null,
       };
     case EDIT_CHAT_IMAGE_SUCCESS:
       return {
@@ -93,7 +92,7 @@ const messageReducer = (state = initialState, action: ActionType) => {
         ),
         message: null,
         loading: false,
-        error: null
+        error: null,
       };
     case CREATE_CHAT_FAILURE:
     case CREATE_MESSAGE_FAILURE:
@@ -104,7 +103,7 @@ const messageReducer = (state = initialState, action: ActionType) => {
       return {
         ...state,
         loading: false,
-        error: action.payload
+        error: action.payload,
       };
     default:
       return state;

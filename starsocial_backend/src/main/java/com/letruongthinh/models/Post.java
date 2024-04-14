@@ -37,6 +37,7 @@ public class Post {
 
     @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Column(length = 20000)
     private String caption;
 
     

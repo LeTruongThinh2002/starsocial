@@ -14,5 +14,7 @@ public interface ReelsService {
 
     public List<Reels> findUsersReel(Integer userId) throws Exception;
 
+    public String deleteReel(Integer reelId, User user) throws Exception;
 
+    public Reels likeReel(Integer reelId, Integer userId) throws Exception;
 }
