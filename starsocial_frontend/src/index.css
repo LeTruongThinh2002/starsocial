@@ -1,5 +1,9 @@
 @tailwind base;
 @layer base {
+  /* PostCardStyles.css */
+  .input-placeholder-style::placeholder {
+    color: rgb(185, 202, 212);
+  }
   .logo {
     @apply text-transparent;
     @apply bg-clip-text;
@@ -26,13 +30,13 @@
   }
   /* latin */
   @font-face {
-    font-family: 'Playball';
+    font-family: "Playball";
     font-weight: 400;
     font-display: swap;
-    src: url(/TK3gWksYAxQ7jbsKcg8Eneo.woff2) format('woff2');
+    src: url(/TK3gWksYAxQ7jbsKcg8Eneo.woff2) format("woff2");
   }
   .playball-regular {
-    font-family: 'Playball', cursive;
+    font-family: "Playball", cursive;
   }
   /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {

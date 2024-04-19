@@ -26,6 +26,7 @@ const initialState = {
   loading: false,
   error: null,
   message: null,
+  chat_image: null,
 };
 
 const messageReducer = (state = initialState, action: ActionType) => {
@@ -77,7 +78,7 @@ const messageReducer = (state = initialState, action: ActionType) => {
           return {
             ...chat,
             messages: chat.messages.filter(
-              (message: any) => message.id !== action.payload
+              (message: any) => message.id !== action.payload,
             ),
           };
         }),
@@ -87,8 +88,9 @@ const messageReducer = (state = initialState, action: ActionType) => {
     case EDIT_CHAT_IMAGE_SUCCESS:
       return {
         ...state,
+        chat_image: action.payload,
         chats: state.chats.map((chat: any) =>
-          chat.id === action.payload.id ? action.payload : chat
+          chat.id === action.payload.id ? action.payload : chat,
         ),
         message: null,
         loading: false,

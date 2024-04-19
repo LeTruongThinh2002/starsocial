@@ -37,7 +37,7 @@ const theme = createTheme({
   },
 });
 
-const SideBar = () => {
+const SideBarBottom = () => {
   const { auth }: any = useSelector((store) => store);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -53,23 +53,9 @@ const SideBar = () => {
   };
 
   return (
-    <div className="bg-transparent backdrop-blur-md shadow-sm shadow-white h-screen w-fit flex flex-col space-y-4 px-2">
-      <div className="flex items-center justify-center py-4">
-        <Link to="/" className=" text-white hover:bg-gray-700 rounded-full">
-          <CTooltip title={"Starsocial"} placement="right" arrow>
-            <IconButton aria-label="Home" color="inherit">
-              <img
-                src="/page/moon-and-stars-svgrepo-com.svg"
-                width={40}
-                alt="home icon"
-                title="home icon"
-              />
-            </IconButton>
-          </CTooltip>
-        </Link>
-      </div>
-      <div className="flex-grow flex items-center justify-center overflow-hidden">
-        <ul className="flex flex-col gap-6">
+    <div className="bg-black shadow-sm shadow-white h-fit w-screen flex flex-row items-center px-5">
+      <div className="flex flex-row w-full items-center justify-center overflow-hidden">
+        <ul className="flex flex-row md:gap-[12vh] gap-[3vh]">
           {SideMenu.map((item, index) => (
             <li
               key={index}
@@ -79,7 +65,7 @@ const SideBar = () => {
                 to={item.path || window.location.pathname}
                 className="text-white hover:bg-gray-700 rounded-full"
               >
-                <CTooltip title={item.title} placement="right" arrow>
+                <CTooltip title={item.title} placement="top" arrow>
                   <IconButton color="inherit">{item.icon}</IconButton>
                 </CTooltip>
               </Link>
@@ -87,7 +73,7 @@ const SideBar = () => {
           ))}
         </ul>
       </div>
-      <div className="flex items-center justify-center py-4 text-white">
+      <div className="text-white">
         <Button
           id="basic-button"
           aria-controls={open ? "basic-menu" : undefined}
@@ -97,8 +83,8 @@ const SideBar = () => {
           color="inherit"
           disableTouchRipple
         >
-          <CTooltip title={"Menu"} placement="right" arrow>
-            <MenuRoundedIcon fontSize="large" />
+          <CTooltip title={"Menu"} placement="top" arrow>
+            <Avatar src={auth.user.avatar} />
           </CTooltip>
         </Button>
         <ThemeProvider theme={theme}>
@@ -112,20 +98,15 @@ const SideBar = () => {
             }}
             anchorOrigin={{
               vertical: "top",
-              horizontal: "right",
+              horizontal: "left",
             }}
             transformOrigin={{
               vertical: "bottom",
-              horizontal: "left",
+              horizontal: "right",
             }}
           >
             <MenuItem onClick={handleClose}>
-              <Link
-                to={`/profile/${auth.user.id}`}
-                className="flex items-center gap-2"
-              >
-                <Avatar src={auth.user.avatar} /> My Profile
-              </Link>
+              <Link to={`/profile/${auth.user.id}`}>My Profile</Link>
             </MenuItem>
             <MenuItem onClick={handleClose}>My account</MenuItem>
             <MenuItem onClick={() => handleClose("logout")} className="gap-2">
@@ -139,4 +120,4 @@ const SideBar = () => {
   );
 };
 
-export default SideBar;
+export default SideBarBottom;

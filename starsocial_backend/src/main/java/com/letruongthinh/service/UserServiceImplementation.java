@@ -195,4 +195,10 @@ public class UserServiceImplementation implements UserService {
 
 		return suggestUsers;
 	}
+
+	@Override
+	public User updateEmail(User user, Integer userId) throws UserException, IOException {
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'updateEmail'");
+	}
 }

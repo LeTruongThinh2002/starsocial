@@ -1,9 +1,9 @@
-import {CircularProgress} from '@mui/material';
+import { CircularProgress } from "@mui/material";
 
 const Loading = () => {
   return (
-    <div className='flex justify-center items-center'>
-      <CircularProgress sx={{color: 'white'}} />
+    <div className="bg-transparent flex justify-center items-center">
+      <CircularProgress sx={{ color: "white" }} />
     </div>
   );
 };

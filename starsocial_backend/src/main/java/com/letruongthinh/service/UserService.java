@@ -17,6 +17,8 @@ public interface UserService {
 	public User followUser(Integer reqUser, Integer userId2) throws UserException;
 	
 	public User updateUser(User user, Integer userId) throws UserException, IOException;
+
+	public User updateEmail(User user, Integer userId) throws UserException, IOException;
 	
 	public List<User>searchUser(String query, Integer userId);
 
